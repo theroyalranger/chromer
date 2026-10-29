@@ -3,7 +3,7 @@
   "image": "lscr.io/linuxserver/chrome:latest",
   "overrideCommand": false,
   "containerEnv": {
-    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CanvasOopRasterization"
+    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --ignore-gpu-blocklist --enable-gpu-rasterization --enable-webgl --enable-webgl2-compute-context --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CanvasOopRasterization,WebGLDraftExtensions"
   },
   "postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html && mkdir -p /etc/opt/chrome/policies/managed && echo '{\"ExtensionInstallForcelist\":[\"icpgjfnebeeeiningbccagbaeagobmkg;https://clients2.google.com/service/update2/crx\"],\"HomepageLocation\":\"file:///defaults/index.html\",\"NewTabPageLocation\":\"file:///defaults/index.html\"}' > /etc/opt/chrome/policies/managed/custom_start_page.json",
   "forwardPorts": [3000],
