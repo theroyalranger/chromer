@@ -2,8 +2,8 @@
   "name": "Selkies Chrome Custom",
   "image": "lscr.io/linuxserver/chrome:latest",
   "hostRequirements": {
-    "cpus": 8,
-    "memory": "32gb"
+    "cpus": 4,
+    "memory": "16gb"
   },
   "overrideCommand": false,
   "containerEnv": {
