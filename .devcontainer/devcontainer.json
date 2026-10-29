@@ -1,0 +1,12 @@
+{
+  "name": "Selkies Chrome",
+  "image": "lscr.io/linuxserver/chrome:latest",
+  "overrideCommand": false,
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Google Chrome (Selkies)",
+      "onAutoForward": "notify"
+    }
+  }
+}
