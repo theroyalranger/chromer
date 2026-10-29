@@ -3,11 +3,9 @@
   "image": "lscr.io/linuxserver/chrome:latest",
   "overrideCommand": false,
   "containerEnv": {
-    "CHROME_CLI": "file:///custom/index.html"
+    "CHROME_CLI": "file:///defaults/index.html"
   },
-  "mounts": [
-    "source=${localWorkspaceFolder}/.devcontainer/index.html,target=/custom/index.html,type=bind"
-  ],
+  "postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html",
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": {
