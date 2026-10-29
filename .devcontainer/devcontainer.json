@@ -1,11 +1,17 @@
 {
-  "name": "Selkies Chrome",
+  "name": "Selkies Chrome Custom",
   "image": "lscr.io/linuxserver/chrome:latest",
   "overrideCommand": false,
+  "containerEnv": {
+    "CHROME_CLI": "file:///custom/index.html"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/index.html,target=/custom/index.html,type=bind"
+  ],
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": {
-      "label": "Google Chrome (Selkies)",
+      "label": "The Royal Chromer",
       "onAutoForward": "notify"
     }
   }
