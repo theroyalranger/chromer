@@ -37,34 +37,45 @@
       pointer-events: none;
     }
 
-    .container {
+    /* Center layout container */
+    .center-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .central-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 1;
+      z-index: 10;
       width: 100%;
-      max-width: 700px;
+      max-width: 520px;
       padding: 20px;
+      position: relative;
     }
 
     h1 {
       font-size: 3.2rem;
       font-weight: 800;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       text-transform: uppercase;
       letter-spacing: 4px;
       background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      text-align: center;
     }
 
     /* Search Bar Form */
     .search-form {
       width: 100%;
-      max-width: 550px;
-      margin-bottom: 2.5rem;
       position: relative;
+      margin-bottom: 1.2rem;
     }
 
     .search-input-wrapper {
@@ -75,7 +86,7 @@
       border-radius: 50px;
       padding: 8px 16px 8px 22px;
       backdrop-filter: blur(12px);
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
@@ -83,7 +94,6 @@
       background: rgba(255, 255, 255, 0.12);
       border-color: rgba(255, 255, 255, 0.4);
       box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
-      transform: translateY(-2px);
     }
 
     .search-icon {
@@ -117,123 +127,379 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background 0.2s ease;
       margin-left: 8px;
     }
 
     .search-button:hover {
       background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
     }
 
-    /* Shortcut Grid */
-    .links-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 22px;
-      max-width: 650px;
+    /* Add New Button (Directly beneath search bar center) */
+    .add-new-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      color: #a1a1aa;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Circular Pill Buttons */
+    .add-new-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #60a5fa;
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Circular Orbit Ring for Shortcuts */
+    .orbit-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Circular Pill Buttons - Absolutely placed in orbit */
     .btn {
+      position: absolute;
+      pointer-events: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 90px;
-      height: 90px;
-      background: rgba(255, 255, 255, 0.05);
+      width: 80px;
+      height: 80px;
+      margin-left: -40px;
+      margin-top: -40px;
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #ffffff;
       text-decoration: none;
       border-radius: 50%;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      position: relative;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      /* Strictly NO movement on hover */
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .btn i {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-      transition: transform 0.3s ease;
+    .btn i, .btn img {
+      font-size: 1.5rem;
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      margin-bottom: 4px;
     }
 
     .btn span {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      opacity: 0.85;
+      letter-spacing: 0.4px;
+      opacity: 0.9;
+      max-width: 65px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
     }
 
+    /* Glow-only hover states (No movement) */
     .btn:hover {
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-6px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #ffffff;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
     }
 
-    .btn:hover i {
-      transform: scale(1.15);
+    /* Delete badge for user-added shortcuts */
+    .delete-btn {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 22px;
+      height: 22px;
+      background: #ef4444;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease, background 0.2s ease;
+      border: none;
     }
 
-    /* Individual Accent Colors on Hover */
-    .btn.youtube:hover { border-color: #ff0000; box-shadow: 0 8px 25px rgba(255, 0, 0, 0.35); }
-    .btn.aternos:hover { border-color: #2b70c9; box-shadow: 0 8px 25px rgba(43, 112, 201, 0.35); }
-    .btn.chunkbase:hover { border-color: #10b981; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35); }
-    .btn.chat:hover { border-color: #00ac47; box-shadow: 0 8px 25px rgba(0, 172, 71, 0.35); }
-    .btn.meet:hover { border-color: #00832d; box-shadow: 0 8px 25px rgba(0, 131, 45, 0.35); }
+    .btn:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+
+    /* Add Shortcut Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: rgba(20, 20, 25, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 28px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal h2 {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .modal input:focus {
+      border-color: #60a5fa;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .modal-btn.cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .modal-btn.save {
+      background: #3b82f6;
+      color: #ffffff;
+    }
   </style>
 </head>
 <body>
   <!-- Canvas background for liquid simulation -->
   <canvas id="waterCanvas"></canvas>
 
-  <div class="container">
-    <h1>The Royal Chromer</h1>
+  <div class="center-wrapper">
+    <!-- Center Column -->
+    <div class="central-box">
+      <h1>The Royal Chromer</h1>
 
-    <!-- Search Bar -->
-    <form class="search-form" action="https://www.google.com/search" method="GET">
-      <div class="search-input-wrapper">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" name="q" class="search-input" placeholder="Search Google or type a URL..." autofocus autocomplete="off">
-        <button type="submit" class="search-button" aria-label="Search">
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
+      <!-- Search Bar -->
+      <form class="search-form" action="https://www.google.com/search" method="GET">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" name="q" class="search-input" placeholder="Search Google or type a URL..." autofocus autocomplete="off">
+          <button type="submit" class="search-button" aria-label="Search">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Add New Button placed directly below Search Bar Center -->
+      <button class="add-new-btn" id="openModalBtn">
+        <i class="fa-solid fa-plus"></i>
+        <span>Add Shortcut</span>
+      </button>
+    </div>
+
+    <!-- Outer Circular Ring Orbit for Websites -->
+    <div class="orbit-container" id="orbitContainer"></div>
+  </div>
+
+  <!-- Modal for Adding Custom Shortcuts -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Add New Shortcut</h2>
+      <input type="text" id="shortcutTitle" placeholder="Shortcut Name (e.g. Twitch)">
+      <input type="url" id="shortcutUrl" placeholder="URL (e.g. https://twitch.tv)">
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="closeModalBtn">Cancel</button>
+        <button class="modal-btn save" id="saveShortcutBtn">Add</button>
       </div>
-    </form>
-
-    <!-- Circular Shortcut Buttons -->
-    <div class="links-grid">
-      <a class="btn youtube" href="https://youtube.com" target="_blank" title="YouTube">
-        <i class="fa-brands fa-youtube" style="color: #ff4e4e;"></i>
-        <span>YouTube</span>
-      </a>
-
-      <a class="btn aternos" href="https://aternos.org" target="_blank" title="Aternos">
-        <i class="fa-solid fa-server" style="color: #60a5fa;"></i>
-        <span>Aternos</span>
-      </a>
-
-      <a class="btn chunkbase" href="https://chunkbase.com" target="_blank" title="Chunkbase">
-        <i class="fa-solid fa-cubes" style="color: #34d399;"></i>
-        <span>Chunkbase</span>
-      </a>
-
-      <a class="btn chat" href="https://chat.google.com" target="_blank" title="Google Chat">
-        <i class="fa-solid fa-comment-dots" style="color: #4ade80;"></i>
-        <span>Chat</span>
-      </a>
-
-      <a class="btn meet" href="https://meet.google.com" target="_blank" title="Google Meet">
-        <i class="fa-solid fa-video" style="color: #2dd4bf;"></i>
-        <span>Meet</span>
-      </a>
     </div>
   </div>
 
   <script>
+    // Initial built-in shortcuts
+    const defaultShortcuts = [
+      { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-brands fa-youtube', color: '#ff4e4e' },
+      { name: 'Aternos', url: 'https://aternos.org', icon: 'fa-solid fa-server', color: '#60a5fa' },
+      { name: 'Chunkbase', url: 'https://chunkbase.com', icon: 'fa-solid fa-cubes', color: '#34d399' },
+      { name: 'Google Chat', url: 'https://chat.google.com', icon: 'fa-solid fa-comment-dots', color: '#4ade80' },
+      { name: 'Google Meet', url: 'https://meet.google.com', icon: 'fa-solid fa-video', color: '#2dd4bf' },
+      { name: 'Gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope', color: '#f87171' },
+      { name: 'Drive', url: 'https://drive.google.com', icon: 'fa-solid fa-hard-drive', color: '#fbbf24' },
+      { name: 'Docs', url: 'https://docs.google.com', icon: 'fa-solid fa-file-lines', color: '#60a5fa' },
+      { name: 'Earth', url: 'https://earth.google.com', icon: 'fa-solid fa-globe-americas', color: '#38bdf8' },
+      { name: 'GitHub', url: 'https://github.com', icon: 'fa-brands fa-github', color: '#e4e4e7' },
+      { name: 'Wikipedia', url: 'https://wikipedia.org', icon: 'fa-solid fa-book', color: '#cbd5e1' },
+      { name: 'ChatGPT', url: 'https://chatgpt.com', icon: 'fa-solid fa-robot', color: '#2dd4bf' }
+    ];
+
+    const orbitContainer = document.getElementById('orbitContainer');
+
+    function getCustomShortcuts() {
+      return JSON.parse(localStorage.getItem('royal_chromer_shortcuts') || '[]');
+    }
+
+    function saveCustomShortcuts(list) {
+      localStorage.setItem('royal_chromer_shortcuts', JSON.stringify(list));
+    }
+
+    // Render orbital circle surrounding central box without overlapping search bar
+    function renderOrbit() {
+      orbitContainer.innerHTML = '';
+      const customList = getCustomShortcuts();
+      const allShortcuts = [...defaultShortcuts, ...customList];
+
+      const total = allShortcuts.length;
+      if (total === 0) return;
+
+      // Generous orbit radius (350px) to keep links clear of central search box & title
+      const radius = 350;
+      const angleStep = (2 * Math.PI) / total;
+      // Offset starting angle so a shortcut sits neatly at top center
+      const startAngle = -Math.PI / 2;
+
+      allShortcuts.forEach((item, index) => {
+        const angle = startAngle + index * angleStep;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+
+        const a = document.createElement('a');
+        a.className = 'btn';
+        a.href = item.url;
+        a.target = '_blank';
+        a.title = item.name;
+        a.style.left = `${x}px`;
+        a.style.top = `${y}px`;
+
+        if (item.icon) {
+          a.innerHTML = `<i class="${item.icon}" style="color: ${item.color || '#fff'};"></i><span>${item.name}</span>`;
+        } else {
+          // Dynamic favicon icon for custom added links
+          const domain = new URL(item.url).hostname;
+          a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=64" alt="${item.name}" onerror="this.src='https://placehold.co/32/3b82f6/fff?text=?'"><span>${item.name}</span>`;
+        }
+
+        // Delete button for user-added links
+        if (index >= defaultShortcuts.length) {
+          const customIdx = index - defaultShortcuts.length;
+          const delBtn = document.createElement('button');
+          delBtn.className = 'delete-btn';
+          delBtn.innerHTML = '×';
+          delBtn.title = 'Remove Shortcut';
+          delBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            removeCustomShortcut(customIdx);
+          };
+          a.appendChild(delBtn);
+        }
+
+        orbitContainer.appendChild(a);
+      });
+    }
+
+    function removeCustomShortcut(index) {
+      const list = getCustomShortcuts();
+      list.splice(index, 1);
+      saveCustomShortcuts(list);
+      renderOrbit();
+    }
+
+    // Modal Interaction Logic
+    const modalOverlay = document.getElementById('modalOverlay');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const saveShortcutBtn = document.getElementById('saveShortcutBtn');
+    const shortcutTitleInput = document.getElementById('shortcutTitle');
+    const shortcutUrlInput = document.getElementById('shortcutUrl');
+
+    openModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.add('active');
+      shortcutTitleInput.focus();
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+
+    saveShortcutBtn.addEventListener('click', () => {
+      const name = shortcutTitleInput.value.trim();
+      let url = shortcutUrlInput.value.trim();
+
+      if (!name || !url) return;
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+
+      const list = getCustomShortcuts();
+      list.push({ name, url });
+      saveCustomShortcuts(list);
+
+      shortcutTitleInput.value = '';
+      shortcutUrlInput.value = '';
+      modalOverlay.classList.remove('active');
+      renderOrbit();
+    });
+
+    renderOrbit();
+
     // Colored Water Physics Simulation
     const canvas = document.getElementById('waterCanvas');
     const ctx = canvas.getContext('2d');
@@ -246,10 +512,9 @@
     window.addEventListener('resize', resize);
     resize();
 
-    const mouse = { x: -1000, y: -1000, vx: 0, vy: 0, px: -1000, py: -1000, active: false };
+    const mouse = { x: -1000, y: -1000, vx: 0, vy: 0, px: -1000, py: -1000 };
 
     window.addEventListener('mousemove', (e) => {
-      mouse.active = true;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       mouse.vx = (mouse.x - mouse.px) * 0.3;
@@ -257,7 +522,6 @@
       mouse.px = mouse.x;
       mouse.py = mouse.y;
 
-      // Spawn liquid dye particles when cursor moves
       const speed = Math.hypot(mouse.vx, mouse.vy);
       const count = Math.min(Math.floor(speed * 1.5) + 2, 8);
       for (let i = 0; i < count; i++) {
@@ -265,16 +529,11 @@
       }
     });
 
-    window.addEventListener('mouseleave', () => {
-      mouse.active = false;
-    });
-
-    // Color palettes for liquid ink
     const colorPalette = [
-      { r: 0, g: 162, b: 255 },   // Electric Cyan
-      { r: 99, g: 102, b: 241 },  // Deep Indigo
-      { r: 168, g: 85, b: 247 },  // Neon Violet
-      { r: 16, g: 185, b: 129 }   // Emerald Blue
+      { r: 0, g: 162, b: 255 },
+      { r: 99, g: 102, b: 241 },
+      { r: 168, g: 85, b: 247 },
+      { r: 16, g: 185, b: 129 }
     ];
 
     let colorIndex = 0;
@@ -286,7 +545,6 @@
       const c2 = colorPalette[(Math.floor(colorIndex) + 1) % colorPalette.length];
       const factor = colorIndex % 1;
 
-      // Blend fluid colors smoothly
       const r = Math.round(c1.r + (c2.r - c1.r) * factor);
       const g = Math.round(c1.g + (c2.g - c1.g) * factor);
       const b = Math.round(c1.b + (c2.b - c1.b) * factor);
@@ -302,38 +560,32 @@
         radius: Math.random() * 30 + 20,
         maxRadius: Math.random() * 80 + 50,
         life: 1,
-        decay: Math.random() * 0.02 + 0.025, // Accelerated decay to fade out in ~1 second (at 60fps)
+        decay: Math.random() * 0.02 + 0.025, // Fades out in ~1 second
         r, g, b,
         swirl: (Math.random() - 0.5) * 0.04
       };
     }
 
     function animate() {
-      // Faster trail clearing so water drops vanish swiftly
       ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
       ctx.fillRect(0, 0, width, height);
 
-      // Dampen mouse velocity vector
       mouse.vx *= 0.9;
       mouse.vy *= 0.9;
 
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
 
-        // Liquid turbulence physics
         p.x += p.vx;
         p.y += p.vy;
 
-        // Swirl current effect
         const tempVx = p.vx;
         p.vx = p.vx * Math.cos(p.swirl) - p.vy * Math.sin(p.swirl);
         p.vy = tempVx * Math.sin(p.swirl) + p.vy * Math.cos(p.swirl);
 
-        // Friction / Fluid resistance
         p.vx *= 0.94;
         p.vy *= 0.94;
 
-        // Expand as water diffuses ink
         if (p.radius < p.maxRadius) {
           p.radius += 0.6;
         }
@@ -345,7 +597,6 @@
           continue;
         }
 
-        // Render soft liquid watercolor drop
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
         
