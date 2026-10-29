@@ -53,21 +53,21 @@
       align-items: center;
       z-index: 10;
       width: 100%;
-      max-width: 520px;
-      padding: 20px;
+      max-width: 420px;
+      padding: 15px;
       position: relative;
     }
 
     h1 {
-      font-size: 3.2rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
       text-align: center;
     }
 
@@ -75,7 +75,7 @@
     .search-form {
       width: 100%;
       position: relative;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.8rem;
     }
 
     .search-input-wrapper {
@@ -84,22 +84,22 @@
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 50px;
-      padding: 8px 16px 8px 22px;
+      padding: 6px 12px 6px 18px;
       backdrop-filter: blur(12px);
       transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
     .search-input-wrapper:focus-within {
       background: rgba(255, 255, 255, 0.12);
       border-color: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
     }
 
     .search-icon {
       color: #9ca3af;
-      font-size: 1.1rem;
-      margin-right: 12px;
+      font-size: 0.95rem;
+      margin-right: 10px;
     }
 
     .search-input {
@@ -108,7 +108,7 @@
       border: none;
       outline: none;
       color: #ffffff;
-      font-size: 1.05rem;
+      font-size: 0.92rem;
       font-weight: 500;
     }
 
@@ -120,15 +120,15 @@
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #ffffff;
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: background 0.2s ease;
-      margin-left: 8px;
+      margin-left: 6px;
     }
 
     .search-button:hover {
@@ -139,13 +139,13 @@
     .add-new-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
+      gap: 6px;
+      padding: 6px 14px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px dashed rgba(255, 255, 255, 0.3);
       border-radius: 30px;
       color: #a1a1aa;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       backdrop-filter: blur(10px);
@@ -156,7 +156,7 @@
       background: rgba(59, 130, 246, 0.2);
       border-color: #60a5fa;
       color: #ffffff;
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
     }
 
     /* Circular Orbit Ring for Shortcuts */
@@ -178,35 +178,35 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 80px;
-      height: 80px;
-      margin-left: -40px;
-      margin-top: -40px;
+      width: 64px;
+      height: 64px;
+      margin-left: -32px;
+      margin-top: -32px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #ffffff;
       text-decoration: none;
       border-radius: 50%;
       backdrop-filter: blur(12px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       /* Strictly NO movement on hover */
       transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .btn i, .btn img {
-      font-size: 1.5rem;
-      width: 26px;
-      height: 26px;
+      font-size: 1.25rem;
+      width: 20px;
+      height: 20px;
       object-fit: contain;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .btn span {
-      font-size: 0.68rem;
+      font-size: 0.6rem;
       font-weight: 600;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
       opacity: 0.9;
-      max-width: 65px;
+      max-width: 52px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -217,7 +217,7 @@
     .btn:hover {
       background: rgba(255, 255, 255, 0.2);
       border-color: #ffffff;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
     /* Delete badge for user-added shortcuts */
@@ -225,15 +225,15 @@
       position: absolute;
       top: -2px;
       right: -2px;
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       background: #ef4444;
       color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       cursor: pointer;
       opacity: 0;
       transition: opacity 0.2s ease, background 0.2s ease;
@@ -409,8 +409,8 @@
       const total = allShortcuts.length;
       if (total === 0) return;
 
-      // Generous orbit radius (350px) to keep links clear of central search box & title
-      const radius = 350;
+      // Scaled down orbit radius (230px) so everything fits comfortably on screen
+      const radius = Math.min(230, window.innerWidth * 0.32, window.innerHeight * 0.35);
       const angleStep = (2 * Math.PI) / total;
       // Offset starting angle so a shortcut sits neatly at top center
       const startAngle = -Math.PI / 2;
