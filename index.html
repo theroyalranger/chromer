@@ -189,7 +189,6 @@
       border-radius: 50%;
       backdrop-filter: blur(12px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      /* Strictly NO movement on hover */
       transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -409,10 +408,8 @@
       const total = allShortcuts.length;
       if (total === 0) return;
 
-      // Scaled down orbit radius (230px) so everything fits comfortably on screen
       const radius = Math.min(230, window.innerWidth * 0.32, window.innerHeight * 0.35);
       const angleStep = (2 * Math.PI) / total;
-      // Offset starting angle so a shortcut sits neatly at top center
       const startAngle = -Math.PI / 2;
 
       allShortcuts.forEach((item, index) => {
@@ -431,12 +428,10 @@
         if (item.icon) {
           a.innerHTML = `<i class="${item.icon}" style="color: ${item.color || '#fff'};"></i><span>${item.name}</span>`;
         } else {
-          // Dynamic favicon icon for custom added links
           const domain = new URL(item.url).hostname;
           a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=64" alt="${item.name}" onerror="this.src='https://placehold.co/32/3b82f6/fff?text=?'"><span>${item.name}</span>`;
         }
 
-        // Delete button for user-added links
         if (index >= defaultShortcuts.length) {
           const customIdx = index - defaultShortcuts.length;
           const delBtn = document.createElement('button');
@@ -560,7 +555,7 @@
         radius: Math.random() * 30 + 20,
         maxRadius: Math.random() * 80 + 50,
         life: 1,
-        decay: Math.random() * 0.02 + 0.025, // Fades out in ~1 second
+        decay: Math.random() * 0.02 + 0.025,
         r, g, b,
         swirl: (Math.random() - 0.5) * 0.04
       };
