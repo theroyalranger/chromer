@@ -3,7 +3,7 @@
   "image": "lscr.io/linuxserver/chrome:latest",
   "overrideCommand": false,
   "containerEnv": {
-    "CHROME_CLI": "file:///defaults/index.html"
+    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html"
   },
   "postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html",
   "forwardPorts": [3000],
