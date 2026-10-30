@@ -727,19 +727,17 @@
                 return;
             }
 
-            const x = Math.floor(e.clientX / scale);
-            const y = Math.floor(e.clientY / scale);
-
             // Track click for CPS calculation
             clickTimestamps.push(Date.now());
             updateCPS();
+
+            // Water ripple disturbance on click disabled per user request
+            // Only click shockwave rings are generated below
 
             const maxRadius = Math.hypot(
                 Math.max(e.clientX, window.innerWidth - e.clientX),
                 Math.max(e.clientY, window.innerHeight - e.clientY)
             );
-
-            disturbWater(x, y, 700, 4);
 
             clickRings.push({
                 x: e.clientX,
