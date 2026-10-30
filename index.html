@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Royal Chromer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -45,9 +48,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             width: 100%;
             height: 100%;
+            padding: 20px;
             pointer-events: none;
         }
 
@@ -55,31 +59,275 @@
             pointer-events: auto;
         }
 
-        .center-hub {
+        /* Top Left CPS Widget */
+        .cps-card {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .cps-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #38bdf8;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cps-lbl {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+        }
+
+        /* Top Header: Clock, Date, Calendar */
+        .top-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
-            width: 600px;
-            height: 600px;
+            z-index: 10;
+        }
+
+        .clock-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 30px;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clock-card:hover {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: rgba(66, 133, 244, 0.5);
+            transform: translateY(2px);
+        }
+
+        .time-display {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .date-display {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 14px;
+        }
+
+        /* Calendar Popover */
+        .calendar-popover {
+            display: none;
+            position: absolute;
+            top: 55px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            flex-direction: column;
+            gap: 12px;
+            z-index: 20;
+        }
+
+        .calendar-popover.active {
+            display: flex;
+        }
+
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .cal-nav {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .cal-nav:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .cal-day-name {
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+            padding-bottom: 4px;
+        }
+
+        .cal-cell {
+            padding: 6px 0;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .cal-cell.today {
+            background: #4285F4;
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(66, 133, 244, 0.6);
+        }
+
+        .cal-cell.has-event {
+            position: relative;
+            cursor: pointer;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .cal-cell.has-custom-event {
+            border-color: rgba(168, 85, 247, 0.6);
+            background: rgba(168, 85, 247, 0.15);
+        }
+
+        .cal-cell.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #38bdf8;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #38bdf8;
+        }
+
+        .cal-cell.has-custom-event::after {
+            background: #a855f7;
+            box-shadow: 0 0 6px #a855f7;
+        }
+
+        .cal-cell:not(.empty):hover {
+            background: rgba(56, 189, 248, 0.25);
+            cursor: pointer;
+        }
+
+        .event-tooltip {
+            margin-top: 6px;
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            font-size: 0.78rem;
+            color: #e0f2fe;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .event-tooltip.active {
+            display: flex;
+        }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .delete-event-btn {
+            background: transparent;
+            border: none;
+            color: #f87171;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .delete-event-btn:hover {
+            background: rgba(248, 113, 113, 0.2);
+        }
+
+        .event-title-text {
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .cal-hint {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .cal-cell.empty {
+            pointer-events: none;
+        }
+
+        /* Center Hub */
+        .center-hub {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            margin-bottom: 60px;
         }
 
         .title {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-family: 'Pacifico', cursive;
+            font-size: 3.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
             margin-bottom: 24px;
-            text-shadow: 0 4px 20px rgba(0, 150, 255, 0.4);
-            background: linear-gradient(135deg, #7928CA, #4285F4, #00DFD8);
+            text-shadow: 0 4px 25px rgba(0, 150, 255, 0.5), 0 0 40px rgba(121, 40, 202, 0.3);
+            background: linear-gradient(135deg, #a855f7, #38bdf8, #00dfd8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            padding: 0 10px;
         }
 
         .search-container {
-            width: 380px;
+            width: 420px;
             position: relative;
-            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
         .search-bar {
@@ -108,91 +356,127 @@
             text-align: left;
         }
 
-        .add-btn {
-            margin-top: 45px;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        /* Add Shortcut Button Under Search Bar */
+        .add-shortcut-center-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
             border-radius: 20px;
-            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(12px);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            cursor: pointer;
             transition: all 0.2s ease;
-            z-index: 5;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
-        .add-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+        .add-shortcut-center-btn:hover {
+            background: rgba(15, 23, 42, 0.85);
+            color: #ffffff;
+            border-color: rgba(66, 133, 244, 0.6);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3);
         }
 
-        .circular-ring {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+        /* Edge Dock Sidebars */
+        .edge-sidebar {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 16px 12px;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .edge-sidebar.left {
+            left: 20px;
+        }
+
+        .edge-sidebar.right {
+            right: 20px;
         }
 
         .shortcut-item {
-            position: absolute;
-            pointer-events: auto;
+            position: relative;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 76px;
-            height: 76px;
-            margin-left: -38px;
-            margin-top: -38px;
             text-decoration: none;
             color: #ffffff;
-            cursor: pointer;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 14px;
+            transition: all 0.2s ease;
         }
 
         .shortcut-item:hover {
-            transform: scale(1.15) !important;
+            transform: scale(1.08);
         }
 
         .shortcut-icon {
-            width: 54px;
-            height: 54px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
-            backdrop-filter: blur(12px);
+            font-size: 1.3rem;
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
             transition: all 0.2s ease;
         }
 
         .shortcut-item:hover .shortcut-icon {
-            background: rgba(66, 133, 244, 0.3);
+            background: rgba(255, 255, 255, 0.2);
             border-color: rgba(66, 133, 244, 0.6);
-            box-shadow: 0 8px 30px rgba(66, 133, 244, 0.4);
+            box-shadow: 0 0 12px rgba(66, 133, 244, 0.4);
         }
 
         .shortcut-label {
-            font-size: 0.75rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
             font-weight: 500;
-            text-align: center;
+            color: #ffffff;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 90px;
-            margin-top: 6px;
-            color: rgba(255, 255, 255, 0.85);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
         }
 
+        .edge-sidebar.left .shortcut-label {
+            left: calc(100% + 12px);
+        }
+
+        .edge-sidebar.right .shortcut-label {
+            right: calc(100% + 12px);
+        }
+
+        .shortcut-item:hover .shortcut-label {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -256,6 +540,13 @@
             background: #4285F4;
             color: #fff;
         }
+
+        /* Selected Day Text in Event Modal */
+        .event-modal-date {
+            font-size: 0.85rem;
+            color: #38bdf8;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -264,20 +555,67 @@
         <canvas id="water-canvas"></canvas>
     </div>
 
-    <div class="ui-layer">
-        <div class="center-hub">
-            <h1 class="title">The Royal Chromer</h1>
+    <!-- Edge Sidebars for Shortcuts -->
+    <div class="edge-sidebar left" id="sidebar-left"></div>
+    <div class="edge-sidebar right" id="sidebar-right"></div>
 
-            <div class="search-container">
-                <input type="text" id="search-input" class="search-bar" placeholder="Search Google or type a URL..." autofocus>
+    <!-- Top Left CPS Counter -->
+    <div class="cps-card">
+        <span class="cps-val" id="cps-value">0.0</span>
+        <span class="cps-lbl">CPS</span>
+    </div>
+
+    <div class="ui-layer">
+        <!-- Top Header with Date/Time & Calendar -->
+        <div class="top-header">
+            <div class="clock-card" id="clock-card">
+                <span class="time-display" id="time-text">00:00:00</span>
+                <span class="date-display" id="date-text">Loading date...</span>
             </div>
 
-            <button class="add-btn" id="open-modal-btn">+ Add Shortcut</button>
+            <div class="calendar-popover" id="calendar-popover">
+                <div class="cal-header">
+                    <button class="cal-nav" id="cal-prev">‹</button>
+                    <span id="cal-month-year">Month 2026</span>
+                    <button class="cal-nav" id="cal-next">›</button>
+                </div>
+                <div class="cal-grid" id="cal-grid"></div>
+                <div class="event-tooltip" id="event-tooltip">
+                    <span class="event-title-text" id="event-tooltip-title">Holiday</span>
+                    <div id="event-tooltip-list"></div>
+                </div>
+                <div class="cal-hint">💡 Click any day to add a custom event</div>
+            </div>
+        </div>
 
-            <div class="circular-ring" id="shortcuts-container"></div>
+        <!-- Center Search Hub -->
+        <div class="center-hub">
+            <h1 class="title">The Royal Chromer</h1>
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-bar" placeholder="Search Google or type a URL..." autofocus>
+                <button class="add-shortcut-center-btn" id="open-add-modal-btn">
+                    <span>+</span> Add Shortcut
+                </button>
+            </div>
+        </div>
+
+        <div></div> <!-- Spacer -->
+    </div>
+
+    <!-- Modal for Adding Custom Calendar Event -->
+    <div class="modal" id="event-modal">
+        <div class="modal-content">
+            <h3>Add Calendar Event</h3>
+            <div class="event-modal-date" id="event-modal-date-text">Date</div>
+            <input type="text" id="event-title-input" placeholder="Event title (e.g. Birthday Party)">
+            <div class="modal-actions">
+                <button class="modal-btn btn-cancel" id="close-event-modal-btn">Cancel</button>
+                <button class="modal-btn btn-save" id="save-event-btn">Save Event</button>
+            </div>
         </div>
     </div>
 
+    <!-- Modal for Adding Shortcuts -->
     <div class="modal" id="add-modal">
         <div class="modal-content">
             <h3>Add New Shortcut</h3>
@@ -291,13 +629,13 @@
     </div>
 
     <script>
-        // Stroberri-Style 2D Water Heightfield & Refraction Simulation
+        // Aurora 2D Water Simulation Engine
         const canvas = document.getElementById('water-canvas');
         const ctx = canvas.getContext('2d');
 
-        let scale = 2; // Resolution downscaling for high performance wave calculation
-        let width = Math.floor(window.innerWidth / scale);
-        let height = Math.floor(window.innerHeight / scale);
+        let scale = 2; 
+        let width = Math.max(1, Math.floor((window.innerWidth || 800) / scale));
+        let height = Math.max(1, Math.floor((window.innerHeight || 600) / scale));
 
         canvas.width = width;
         canvas.height = height;
@@ -306,22 +644,28 @@
         let buffer2 = new Float32Array(width * height);
         let imgData = ctx.createImageData(width, height);
 
-        // Click Ripple Shockwaves Array
         const clickRings = [];
+        let auroraPhase = 0;
 
-        window.addEventListener('resize', () => {
-            width = Math.floor(window.innerWidth / scale);
-            height = Math.floor(window.innerHeight / scale);
+        function resizeCanvas() {
+            const w = Math.max(1, Math.floor(window.innerWidth / scale));
+            const h = Math.max(1, Math.floor(window.innerHeight / scale));
+            
+            if (w === width && h === height) return;
+            
+            width = w;
+            height = h;
             canvas.width = width;
             canvas.height = height;
             buffer1 = new Float32Array(width * height);
             buffer2 = new Float32Array(width * height);
             imgData = ctx.createImageData(width, height);
-        });
+        }
 
-        // Water surface disturbance
-        function disturbWater(x, y, strength, radius = 3) {
-            const pad = 5;
+        window.addEventListener('resize', resizeCanvas);
+
+        function disturbWater(x, y, strength, radius = 2) {
+            const pad = 3;
             if (x < pad || x >= width - pad || y < pad || y >= height - pad) return;
 
             for (let j = -radius; j <= radius; j++) {
@@ -338,7 +682,27 @@
         let lastMouseX = null;
         let lastMouseY = null;
 
+        // CPS Counter Logic
+        const clickTimestamps = [];
+        const cpsDisplay = document.getElementById('cps-value');
+
+        function updateCPS() {
+            const now = Date.now();
+            // Retain clicks from the past 1000ms
+            while (clickTimestamps.length > 0 && clickTimestamps[0] <= now - 1000) {
+                clickTimestamps.shift();
+            }
+            cpsDisplay.textContent = clickTimestamps.length.toFixed(1);
+        }
+
         window.addEventListener('mousemove', (e) => {
+            // Disable effect when hovering over interactive UI elements
+            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover')) {
+                lastMouseX = null;
+                lastMouseY = null;
+                return;
+            }
+
             const x = Math.floor(e.clientX / scale);
             const y = Math.floor(e.clientY / scale);
 
@@ -346,113 +710,136 @@
                 const dx = e.clientX - lastMouseX;
                 const dy = e.clientY - lastMouseY;
                 const speed = Math.hypot(dx, dy);
-                if (speed > 1) {
-                    disturbWater(x, y, Math.min(speed * 8, 300), 2);
+                if (speed > 0.5) {
+                    disturbWater(x, y, Math.min(speed * 12, 350), 2);
                 }
             } else {
-                disturbWater(x, y, 120, 2);
+                disturbWater(x, y, 150, 2);
             }
 
             lastMouseX = e.clientX;
             lastMouseY = e.clientY;
         });
 
-        // Click Shockwave Circle Effect
         window.addEventListener('mousedown', (e) => {
+            // Disable effect when clicking on interactive UI elements
+            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover')) {
+                return;
+            }
+
             const x = Math.floor(e.clientX / scale);
             const y = Math.floor(e.clientY / scale);
 
-            // Calculate distance to the furthest corner so the ring reaches the entire edge of the screen
+            // Track click for CPS calculation
+            clickTimestamps.push(Date.now());
+            updateCPS();
+
             const maxRadius = Math.hypot(
                 Math.max(e.clientX, window.innerWidth - e.clientX),
                 Math.max(e.clientY, window.innerHeight - e.clientY)
             );
 
-            // Strong physical shockwave impulse
-            disturbWater(x, y, 600, 5);
+            disturbWater(x, y, 700, 4);
 
-            // Visual shockwave ring particle
             clickRings.push({
                 x: e.clientX,
                 y: e.clientY,
                 radius: 4,
                 maxRadius: maxRadius,
-                alpha: 0.85
+                hue: Math.floor(Math.random() * 120 + 150)
             });
         });
 
         function renderWaterSimulation() {
-            const dampening = 0.968;
+            // Multi-step solver iteration for fast wave movement
+            const iterations = 2;
+            const dampening = 0.945; // Rapid dissipation
             const data = imgData.data;
 
-            // 1. Water Physics Buffer Update
+            auroraPhase += 0.015;
+
+            for (let iter = 0; iter < iterations; iter++) {
+                for (let y = 1; y < height - 1; y++) {
+                    for (let x = 1; x < width - 1; x++) {
+                        const index = y * width + x;
+
+                        buffer2[index] = (
+                            buffer1[index - 1] +
+                            buffer1[index + 1] +
+                            buffer1[index - width] +
+                            buffer1[index + width]
+                        ) / 2 - buffer2[index];
+
+                        buffer2[index] *= dampening;
+                    }
+                }
+
+                // Absorb boundaries completely to prevent bouncing
+                for (let x = 0; x < width; x++) {
+                    buffer2[x] = 0;
+                    buffer2[(height - 1) * width + x] = 0;
+                }
+                for (let y = 0; y < height; y++) {
+                    buffer2[y * width] = 0;
+                    buffer2[y * width + (width - 1)] = 0;
+                }
+
+                const temp = buffer1;
+                buffer1 = buffer2;
+                buffer2 = temp;
+            }
+
+            // Render Shading & Aurora Color Phase
             for (let y = 1; y < height - 1; y++) {
                 for (let x = 1; x < width - 1; x++) {
                     const index = y * width + x;
+                    const xGrad = buffer1[index - 1] - buffer1[index + 1];
+                    const yGrad = buffer1[index - width] - buffer1[index + width];
 
-                    buffer2[index] = (
-                        buffer1[index - 1] +
-                        buffer1[index + 1] +
-                        buffer1[index - width] +
-                        buffer1[index + width]
-                    ) / 2 - buffer2[index];
-
-                    buffer2[index] *= dampening;
-
-                    // Light Refraction & Shading Calculation
-                    const xGrad = buffer2[index - 1] - buffer2[index + 1];
-                    const yGrad = buffer2[index - width] - buffer2[index + width];
-
+                    const val = xGrad + yGrad;
                     const pixelIdx = index * 4;
-                    // Dark theme base (#06090e) with blue/cyan water highlights
-                    const r = Math.min(255, Math.max(0, 6 + xGrad * 1.8));
-                    const g = Math.min(255, Math.max(0, 9 + yGrad * 2.5));
-                    const b = Math.min(255, Math.max(0, 18 + (xGrad + yGrad) * 3.5));
 
-                    data[pixelIdx] = r;
-                    data[pixelIdx + 1] = g;
-                    data[pixelIdx + 2] = b;
-                    data[pixelIdx + 3] = 255;
+                    if (Math.abs(val) > 0.1) {
+                        // Dynamic Aurora Gradient Shifts
+                        const waveFactor = Math.sin(auroraPhase + (x + y) * 0.02);
+                        const r = Math.min(255, Math.max(0, 6 + val * (1.2 + waveFactor * 0.5)));
+                        const g = Math.min(255, Math.max(0, 15 + val * (2.8 + waveFactor * 1.2)));
+                        const b = Math.min(255, Math.max(0, 30 + val * (4.0 - waveFactor * 1.0)));
+
+                        data[pixelIdx] = r;
+                        data[pixelIdx + 1] = g;
+                        data[pixelIdx + 2] = b;
+                        data[pixelIdx + 3] = 255;
+                    } else {
+                        // Dark background base
+                        data[pixelIdx] = 6;
+                        data[pixelIdx + 1] = 9;
+                        data[pixelIdx + 2] = 14;
+                        data[pixelIdx + 3] = 255;
+                    }
                 }
             }
 
-            // 2. Edge Dampening Guardrails (Absorb boundary wave reflections)
-            for (let x = 0; x < width; x++) {
-                buffer2[x] = 0;
-                buffer2[(height - 1) * width + x] = 0;
-            }
-            for (let y = 0; y < height; y++) {
-                buffer2[y * width] = 0;
-                buffer2[y * width + (width - 1)] = 0;
-            }
-
-            // Swap Heightfield Buffers
-            const temp = buffer1;
-            buffer1 = buffer2;
-            buffer2 = temp;
-
-            // Render Refracted Water Heightfield
             ctx.putImageData(imgData, 0, 0);
 
-            // 3. Render Expanding Click Shockwave Circles
+            // Expanding Shockwave Circles on Click
             ctx.save();
             for (let i = clickRings.length - 1; i >= 0; i--) {
                 const ring = clickRings[i];
-                ring.radius += 8.5; // Slightly faster expansion speed
-                
-                // Scale fade out based on dynamic max radius so it stays visible all the way to the edges
-                const progress = ring.radius / ring.maxRadius;
-                ring.alpha = Math.max(0, 0.85 * (1 - progress));
+                ring.radius += 24.0; // Fast ring expansion
 
-                if (ring.alpha <= 0 || ring.radius >= ring.maxRadius) {
+                const progress = ring.radius / ring.maxRadius;
+                const alpha = Math.max(0, 0.85 * (1 - progress));
+
+                if (alpha <= 0 || ring.radius >= ring.maxRadius) {
                     clickRings.splice(i, 1);
                     continue;
                 }
 
                 ctx.lineWidth = 2.5;
-                ctx.strokeStyle = `rgba(0, 223, 216, ${ring.alpha})`;
-                ctx.shadowColor = 'rgba(66, 133, 244, 0.8)';
-                ctx.shadowBlur = 12;
+                ctx.strokeStyle = `hsla(${ring.hue}, 90%, 60%, ${alpha})`;
+                ctx.shadowColor = `hsla(${ring.hue}, 100%, 50%, 0.8)`;
+                ctx.shadowBlur = 16;
 
                 ctx.beginPath();
                 ctx.arc(ring.x / scale, ring.y / scale, ring.radius / scale, 0, Math.PI * 2);
@@ -464,6 +851,214 @@
         }
 
         renderWaterSimulation();
+
+        // Clock & Date Updates
+        function updateClockAndDate() {
+            const now = new Date();
+            
+            // Time string format (HH:MM:SS)
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time-text').textContent = `${hours}:${minutes}:${seconds}`;
+
+            // Date string format
+            const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+            document.getElementById('date-text').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        setInterval(updateClockAndDate, 1000);
+        updateClockAndDate();
+
+        // Holiday Engine Helper
+        function getHolidayForDate(year, month, day) {
+            // Month is 0-indexed (0 = Jan, 11 = Dec)
+            if (month === 0 && day === 1) return "🎉 New Year's Day";
+            if (month === 1 && day === 14) return "❤️ Valentine's Day";
+            if (month === 2 && day === 17) return "☘️ St. Patrick's Day";
+            if (month === 6 && day === 4) return "🎆 Independence Day";
+            if (month === 9 && day === 31) return "🎃 Halloween";
+            if (month === 10 && day === 11) return "🎖️ Veterans Day";
+            if (month === 11 && day === 24) return "🎄 Christmas Eve";
+            if (month === 11 && day === 25) return "🎁 Christmas Day";
+            if (month === 11 && day === 31) return "🥳 New Year's Eve";
+            return null;
+        }
+
+        // Calendar State Initialization
+        let currCalDate = new Date();
+        let selectedEventDate = null; // { year, month, day }
+
+        // Custom Local Storage Events Manager
+        function getCustomEvents() {
+            const saved = localStorage.getItem('royal_chromer_shortcuts');
+            return saved ? JSON.parse(saved) : defaultShortcuts;
+        }
+
+        // Custom Local Storage Events Manager
+        function getCustomEventsData() {
+            const saved = localStorage.getItem('royal_chromer_events');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function saveCustomEventsData(events) {
+            localStorage.setItem('royal_chromer_events', JSON.stringify(events));
+        }
+
+        function addCustomEvent(year, month, day, text) {
+            const events = getCustomEventsData();
+            const key = `${year}-${month}-${day}`;
+            if (!events[key]) events[key] = [];
+            events[key].push(text);
+            saveCustomEventsData(events);
+            renderCalendar();
+        }
+
+        function removeCustomEvent(year, month, day, index) {
+            const events = getCustomEventsData();
+            const key = `${year}-${month}-${day}`;
+            if (events[key]) {
+                events[key].splice(index, 1);
+                if (events[key].length === 0) delete events[key];
+                saveCustomEventsData(events);
+                renderCalendar();
+            }
+        }
+
+        // Event Modal Controls
+        const eventModal = document.getElementById('event-modal');
+        const eventTitleInput = document.getElementById('event-title-input');
+        const closeEventModalBtn = document.getElementById('close-event-modal-btn');
+        const saveEventBtn = document.getElementById('save-event-btn');
+
+        closeEventModalBtn.addEventListener('click', () => {
+            eventModal.style.display = 'none';
+        });
+
+        saveEventBtn.addEventListener('click', () => {
+            const text = eventTitleInput.value.trim();
+            if (text && selectedEventDate) {
+                addCustomEvent(selectedEventDate.year, selectedEventDate.month, selectedEventDate.day, text);
+                eventTitleInput.value = '';
+                eventModal.style.display = 'none';
+            }
+        });
+
+        function renderCalendar() {
+            const year = currCalDate.getFullYear();
+            const month = currCalDate.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('cal-month-year').textContent = `${monthNames[month]} ${year}`;
+
+            const grid = document.getElementById('cal-grid');
+            grid.innerHTML = '';
+            const tooltip = document.getElementById('event-tooltip');
+            tooltip.classList.remove('active');
+
+            const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            dayNames.forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'cal-day-name';
+                el.textContent = d;
+                grid.appendChild(el);
+            });
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            const customEventsMap = getCustomEventsData();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'cal-cell empty';
+                grid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell';
+                cell.textContent = day;
+
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    cell.classList.add('today');
+                }
+
+                const holidayName = getHolidayForDate(year, month, day);
+                const eventKey = `${year}-${month}-${day}`;
+                const userEvents = customEventsMap[eventKey] || [];
+
+                if (holidayName || userEvents.length > 0) {
+                    cell.classList.add('has-event');
+                    if (userEvents.length > 0) {
+                        cell.classList.add('has-custom-event');
+                    }
+
+                    cell.addEventListener('mouseenter', () => {
+                        document.getElementById('event-tooltip-title').textContent = `${monthNames[month]} ${day}, ${year}`;
+                        const listContainer = document.getElementById('event-tooltip-list');
+                        listContainer.innerHTML = '';
+
+                        if (holidayName) {
+                            const holEl = document.createElement('div');
+                            holEl.className = 'event-item';
+                            holEl.textContent = holidayName;
+                            listContainer.appendChild(holEl);
+                        }
+
+                        userEvents.forEach((evText, idx) => {
+                            const evEl = document.createElement('div');
+                            evEl.className = 'event-item';
+                            evEl.innerHTML = `
+                                <span>📌 ${evText}</span>
+                                <button class="delete-event-btn" title="Delete Event">×</button>
+                            `;
+                            evEl.querySelector('.delete-event-btn').addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                removeCustomEvent(year, month, day, idx);
+                            });
+                            listContainer.appendChild(evEl);
+                        });
+
+                        tooltip.classList.add('active');
+                    });
+                }
+
+                // Click to open custom event modal
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedEventDate = { year, month, day };
+                    document.getElementById('event-modal-date-text').textContent = `${monthNames[month]} ${day}, ${year}`;
+                    eventTitleInput.value = '';
+                    eventModal.style.display = 'flex';
+                    eventTitleInput.focus();
+                });
+
+                grid.appendChild(cell);
+            }
+        }
+
+        const clockCard = document.getElementById('clock-card');
+        const calPopover = document.getElementById('calendar-popover');
+
+        clockCard.addEventListener('click', () => {
+            calPopover.classList.toggle('active');
+            if (calPopover.classList.contains('active')) {
+                renderCalendar();
+            }
+        });
+
+        document.getElementById('cal-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currCalDate.setMonth(currCalDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('cal-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currCalDate.setMonth(currCalDate.getMonth() + 1);
+            renderCalendar();
+        });
 
         // Search Bar Logic
         const searchInput = document.getElementById('search-input');
@@ -482,7 +1077,7 @@
             }
         });
 
-        // Shortcuts & Radial Layout Manager
+        // Shortcuts & Edge Dock Manager
         const defaultShortcuts = [
             { title: 'Google Earth', url: 'https://earth.google.com', icon: '🌎' },
             { title: 'YouTube', url: 'https://www.youtube.com', icon: '▶' },
@@ -504,29 +1099,38 @@
         }
 
         function renderShortcuts() {
-            const container = document.getElementById('shortcuts-container');
-            container.innerHTML = '';
+            const leftSidebar = document.getElementById('sidebar-left');
+            const rightSidebar = document.getElementById('sidebar-right');
+
+            leftSidebar.innerHTML = '';
+            rightSidebar.innerHTML = '';
+
             const list = getShortcuts();
-            const total = list.length;
-            const radius = 230; // Ring radius from center hub
-            const centerX = 300;
-            const centerY = 300;
+            const half = Math.ceil(list.length / 2);
 
-            list.forEach((item, index) => {
-                const angle = (index / total) * (2 * Math.PI) - (Math.PI / 2);
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
+            const leftList = list.slice(0, half);
+            const rightList = list.slice(half);
 
+            leftList.forEach(item => {
                 const a = document.createElement('a');
                 a.className = 'shortcut-item';
                 a.href = item.url;
-                a.style.left = `${x}px`;
-                a.style.top = `${y}px`;
                 a.innerHTML = `
                     <div class="shortcut-icon">${item.icon || '🌐'}</div>
-                    <div class="shortcut-label">${item.title}</div>
+                    <span class="shortcut-label">${item.title}</span>
                 `;
-                container.appendChild(a);
+                leftSidebar.appendChild(a);
+            });
+
+            rightList.forEach(item => {
+                const a = document.createElement('a');
+                a.className = 'shortcut-item';
+                a.href = item.url;
+                a.innerHTML = `
+                    <div class="shortcut-icon">${item.icon || '🌐'}</div>
+                    <span class="shortcut-label">${item.title}</span>
+                `;
+                rightSidebar.appendChild(a);
             });
         }
 
@@ -534,7 +1138,7 @@
 
         // Modal Management
         const modal = document.getElementById('add-modal');
-        const openBtn = document.getElementById('open-modal-btn');
+        const openBtn = document.getElementById('open-add-modal-btn');
         const closeBtn = document.getElementById('close-modal-btn');
         const saveBtn = document.getElementById('save-shortcut-btn');
 
