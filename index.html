@@ -885,6 +885,38 @@
             });
         });
 
+        // Search Engine Submission Handler
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (!query) return;
+
+                // Check if query is a valid URL
+                const isUrl = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/.*)?$/i.test(query);
+
+                if (isUrl) {
+                    const targetUrl = query.startsWith('http://') || query.startsWith('https://') 
+                        ? query 
+                        : `https://${query}`;
+                    window.location.href = targetUrl;
+                } else {
+                    let searchUrl = '';
+                    const encodedQuery = encodeURIComponent(query);
+
+                    if (currentEngine === 'ddg') {
+                        searchUrl = `https://duckduckgo.com/?q=${encodedQuery}`;
+                    } else if (currentEngine === 'youtube') {
+                        searchUrl = `https://www.youtube.com/results?search_query=${encodedQuery}`;
+                    } else {
+                        // Default to Google
+                        searchUrl = `https://www.google.com/search?q=${encodedQuery}`;
+                    }
+
+                    window.location.href = searchUrl;
+                }
+            }
+        });
+
         // Quick Notes Drawer Logic
         const notesBtn = document.getElementById('notes-toggle-btn');
         const notesDrawer = document.getElementById('notes-drawer');
