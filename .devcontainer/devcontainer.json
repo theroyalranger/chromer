@@ -1,25 +1,20 @@
 {
-  "name": "Selkies Chrome Custom",
-  "image": "lscr.io/linuxserver/chrome:latest",
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "16gb"
-  },
-  "overrideCommand": false,
-  "containerEnv": {
-    "SELKIES_FRAMERATE": "30-60",
-    "SELKIES_ENCODER": "h264",
-    "SELKIES_H264_CRF": "28",
-    "SELKIES_MANUAL_WIDTH": "1280",
-    "SELKIES_MANUAL_HEIGHT": "720",
-    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading"
-  },
-  "postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html && mkdir -p /etc/opt/chrome/policies/managed && echo '{\"ExtensionInstallForcelist\":[\"icpgjfnebeeeiningbccagbaeagobmkg;https://clients2.google.com/service/update2/crx\"],\"HomepageLocation\":\"file:///defaults/index.html\",\"NewTabPageLocation\":\"file:///defaults/index.html\"}' > /etc/opt/chrome/policies/managed/custom_start_page.json",
-  "forwardPorts": [3000],
-  "portsAttributes": {
-    "3000": {
-      "label": "The Royal Chromer",
-      "onAutoForward": "notify"
-    }
-  }
+"name": "The Royal Chromer",
+"image": "mcr.microsoft.com/devcontainers/universal:2",
+"containerEnv": {
+"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --allow-file-access-from-files --disable-web-security --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --disable-ipc-flooding-protection --enable-features=ParallelDownloading,CanvasOopRasterization"
+},
+"postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html",
+"customizations": {
+"vscode": {
+"settings": {
+"editor.formatOnSave": true
+},
+"extensions": [
+"formulahendry.auto-close-tag",
+"formulahendry.auto-rename-tag"
+]
+}
+},
+"forwardPorts": [8080]
 }
