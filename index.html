@@ -59,36 +59,52 @@
             pointer-events: auto;
         }
 
-        /* Top Left CPS Widget */
+        /* Top Left CPS & Performance Widget */
         .cps-card {
             position: fixed;
             top: 20px;
             left: 20px;
+            transform: none;
             background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 20px;
-            padding: 8px 18px;
+            padding: 10px 16px;
             display: flex;
+            flex-direction: row;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             z-index: 10;
             pointer-events: auto;
         }
 
+        .cps-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
         .cps-val {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: #38bdf8;
             font-variant-numeric: tabular-nums;
+            line-height: 1;
         }
 
         .cps-lbl {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.6);
             letter-spacing: 0.5px;
+        }
+
+        .cps-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.12);
         }
 
         /* Top Header: Clock, Date, Calendar */
@@ -117,7 +133,60 @@
         .clock-card:hover {
             background: rgba(15, 23, 42, 0.85);
             border-color: rgba(66, 133, 244, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Weather Button Header Widget */
+        .weather-btn-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .weather-btn-card:hover {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: rgba(56, 189, 248, 0.6);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 36px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Weather Button Header Widget */
+        .weather-btn-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .weather-btn-card:hover {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: rgba(56, 189, 248, 0.6);
             transform: translateY(2px);
+            box-shadow: 0 8px 32px rgba(56, 189, 248, 0.25);
         }
 
         .time-display {
@@ -415,7 +484,27 @@
             text-decoration: none;
             color: #ffffff;
             border-radius: 14px;
-            transition: all 0.2s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+            will-change: transform;
+        }
+
+        .shortcut-item:hover {
+            transform: scale(1.15) translateY(-2px);
+        }
+
+        .shortcut-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .shortcut-item:hover {
@@ -544,33 +633,63 @@
         /* Selected Day Text in Event Modal */
         .event-modal-date {
             font-size: 0.85rem;
-            color: #38bdf8;
-            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
         }
     </style>
 </head>
 <body>
-
     <div id="canvas-container">
         <canvas id="water-canvas"></canvas>
     </div>
 
-    <!-- Edge Sidebars for Shortcuts -->
+    <!-- Edge Dock Sidebars -->
     <div class="edge-sidebar left" id="sidebar-left"></div>
     <div class="edge-sidebar right" id="sidebar-right"></div>
 
-    <!-- Top Left CPS Counter -->
+    <!-- Left Side CPS, Performance & System Stats Widget -->
     <div class="cps-card">
-        <span class="cps-val" id="cps-value">0.0</span>
-        <span class="cps-lbl">CPS</span>
+        <div class="cps-stat-item">
+            <span class="cps-val" id="cps-value">0.0</span>
+            <span class="cps-lbl">CPS</span>
+        </div>
+        <div class="cps-divider"></div>
+        <div class="cps-stat-item">
+            <span class="cps-val" id="fps-value" style="color: #4ade80;">60</span>
+            <span class="cps-lbl">FPS</span>
+        </div>
+        <div class="cps-divider"></div>
+        <div class="cps-stat-item">
+            <span class="cps-val" id="ping-value" style="color: #a855f7;">12ms</span>
+            <span class="cps-lbl">PING</span>
+        </div>
+    </div>
+
+    <!-- Notes Floating Drawer Button (Bottom Right) -->
+    <button id="notes-toggle-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 10; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Toggle Quick Notes">📝</button>
+
+    <!-- Notes Drawer -->
+    <div id="notes-drawer" style="display: none; position: fixed; bottom: 75px; right: 20px; z-index: 10; width: 280px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-direction: column; gap: 10px;">
+        <div style="font-weight: 600; font-size: 0.9rem; color: #38bdf8; display: flex; justify-content: space-between; align-items: center;">
+            <span>⚡ Quick Scratchpad</span>
+            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Auto-saved</span>
+        </div>
+        <textarea id="quick-notes-area" style="width: 100%; height: 120px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; padding: 10px; font-family: inherit; font-size: 0.85rem; resize: none; outline: none;" placeholder="Jot down notes or quick to-dos..."></textarea>
     </div>
 
     <div class="ui-layer">
         <!-- Top Header with Date/Time & Calendar -->
         <div class="top-header">
-            <div class="clock-card" id="clock-card">
-                <span class="time-display" id="time-text">00:00:00</span>
-                <span class="date-display" id="date-text">Loading date...</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="clock-card" id="clock-card">
+                    <span class="time-display" id="time-text">00:00:00</span>
+                    <span class="date-display" id="date-text">Loading date...</span>
+                </div>
+
+                <a href="https://www.google.com/search?q=weather" target="_blank" class="weather-btn-card" id="weather-btn" title="Click to open Google Weather forecast & statistics">
+                    <span id="weather-icon">☀️</span>
+                    <span id="weather-temp">72°F</span>
+                    <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-left: 2px;">Forecast ↗</span>
+                </a>
             </div>
 
             <div class="calendar-popover" id="calendar-popover">
@@ -592,6 +711,11 @@
         <div class="center-hub">
             <h1 class="title">The Royal Chromer</h1>
             <div class="search-container">
+                <div style="display: flex; gap: 8px; margin-bottom: -6px;">
+                    <button class="engine-btn active" data-engine="google" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Google</button>
+                    <button class="engine-btn" data-engine="ddg" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">DuckDuckGo</button>
+                    <button class="engine-btn" data-engine="youtube" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">YouTube</button>
+                </div>
                 <input type="text" id="search-input" class="search-bar" placeholder="Search Google or type a URL..." autofocus>
                 <button class="add-shortcut-center-btn" id="open-add-modal-btn">
                     <span>+</span> Add Shortcut
@@ -634,14 +758,19 @@
         const ctx = canvas.getContext('2d');
 
         let scale = 2; 
+        const marginOffset = 256; // Massive off-screen padding so waves extend far beyond the display
         let width = Math.max(1, Math.floor((window.innerWidth || 800) / scale));
         let height = Math.max(1, Math.floor((window.innerHeight || 600) / scale));
+
+        // Extended grid dimensions so wave equations run past visible bounds
+        let simWidth = width + marginOffset * 2;
+        let simHeight = height + marginOffset * 2;
 
         canvas.width = width;
         canvas.height = height;
 
-        let buffer1 = new Float32Array(width * height);
-        let buffer2 = new Float32Array(width * height);
+        let buffer1 = new Float32Array(simWidth * simHeight);
+        let buffer2 = new Float32Array(simWidth * simHeight);
         let imgData = ctx.createImageData(width, height);
 
         const clickRings = [];
@@ -655,25 +784,33 @@
             
             width = w;
             height = h;
+            simWidth = width + marginOffset * 2;
+            simHeight = height + marginOffset * 2;
+
             canvas.width = width;
             canvas.height = height;
-            buffer1 = new Float32Array(width * height);
-            buffer2 = new Float32Array(width * height);
+            buffer1 = new Float32Array(simWidth * simHeight);
+            buffer2 = new Float32Array(simWidth * simHeight);
             imgData = ctx.createImageData(width, height);
         }
 
         window.addEventListener('resize', resizeCanvas);
 
-        function disturbWater(x, y, strength, radius = 2) {
-            const pad = 3;
-            if (x < pad || x >= width - pad || y < pad || y >= height - pad) return;
+        function disturbWater(x, y, strength, radius = 3) {
+            // Translate visible canvas coordinates into extended simulation grid space
+            const simX = x + marginOffset;
+            const simY = y + marginOffset;
 
             for (let j = -radius; j <= radius; j++) {
                 for (let i = -radius; i <= radius; i++) {
-                    const nx = x + i;
-                    const ny = y + j;
-                    if (nx >= pad && nx < width - pad && ny >= pad && ny < height - pad) {
-                        buffer1[ny * width + nx] += strength;
+                    const distSq = i * i + j * j;
+                    if (distSq <= radius * radius) {
+                        const nx = simX + i;
+                        const ny = simY + j;
+                        if (nx >= 1 && nx < simWidth - 1 && ny >= 1 && ny < simHeight - 1) {
+                            const falloff = 1 - Math.sqrt(distSq) / (radius + 1);
+                            buffer1[ny * simWidth + nx] += strength * falloff;
+                        }
                     }
                 }
             }
@@ -682,48 +819,89 @@
         let lastMouseX = null;
         let lastMouseY = null;
 
-        // CPS Counter Logic
+        // CPS & FPS Counter Logic
         const clickTimestamps = [];
         const cpsDisplay = document.getElementById('cps-value');
+        const fpsDisplay = document.getElementById('fps-value');
+
+        // FPS Calculation Variables
+        let frameCount = 0;
+        let lastFpsTime = performance.now();
 
         function updateCPS() {
             const now = Date.now();
-            // Retain clicks from the past 1000ms
             while (clickTimestamps.length > 0 && clickTimestamps[0] <= now - 1000) {
                 clickTimestamps.shift();
             }
             cpsDisplay.textContent = clickTimestamps.length.toFixed(1);
         }
 
+        setInterval(updateCPS, 50);
+
         window.addEventListener('mousemove', (e) => {
-            // Disable effect when hovering over interactive UI elements
-            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover')) {
+            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover, #notes-drawer, #notes-toggle-btn')) {
                 lastMouseX = null;
                 lastMouseY = null;
                 return;
             }
 
-            const x = Math.floor(e.clientX / scale);
-            const y = Math.floor(e.clientY / scale);
-
             if (lastMouseX !== null && lastMouseY !== null) {
                 const dx = e.clientX - lastMouseX;
                 const dy = e.clientY - lastMouseY;
-                const speed = Math.hypot(dx, dy);
-                if (speed > 0.5) {
-                    disturbWater(x, y, Math.min(speed * 12, 350), 2);
+                const dist = Math.hypot(dx, dy);
+
+                if (dist > 1) {
+                    const steps = Math.min(Math.floor(dist / 2), 16);
+                    for (let i = 0; i <= steps; i++) {
+                        const interpX = Math.floor((lastMouseX + (dx * i) / Math.max(1, steps)) / scale);
+                        const interpY = Math.floor((lastMouseY + (dy * i) / Math.max(1, steps)) / scale);
+                        disturbWater(interpX, interpY, 280, 2);
+                    }
                 }
             } else {
-                disturbWater(x, y, 150, 2);
+                disturbWater(Math.floor(e.clientX / scale), Math.floor(e.clientY / scale), 280, 2);
             }
 
             lastMouseX = e.clientX;
             lastMouseY = e.clientY;
         });
 
+        // Search Engine State
+        let currentEngine = 'google';
+        const searchInput = document.getElementById('search-input');
+
+        document.querySelectorAll('.engine-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.engine-btn').forEach(b => {
+                    b.style.background = 'rgba(255,255,255,0.05)';
+                    b.style.color = 'rgba(255,255,255,0.6)';
+                    b.style.borderColor = 'rgba(255,255,255,0.1)';
+                });
+                btn.style.background = 'rgba(255,255,255,0.15)';
+                btn.style.color = '#fff';
+                btn.style.borderColor = 'rgba(255,255,255,0.2)';
+                currentEngine = btn.dataset.engine;
+                searchInput.placeholder = `Search ${btn.textContent} or type a URL...`;
+            });
+        });
+
+        // Quick Notes Drawer Logic
+        const notesBtn = document.getElementById('notes-toggle-btn');
+        const notesDrawer = document.getElementById('notes-drawer');
+        const notesArea = document.getElementById('quick-notes-area');
+
+        notesBtn.addEventListener('click', () => {
+            notesDrawer.style.display = notesDrawer.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        notesArea.value = localStorage.getItem('royal_chromer_quick_notes') || '';
+        notesArea.addEventListener('input', () => {
+            localStorage.setItem('royal_chromer_quick_notes', notesArea.value);
+        });
+
         window.addEventListener('mousedown', (e) => {
             // Disable effect when clicking on interactive UI elements
-            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover')) {
+            if (e.target.closest('.ui-layer, .edge-sidebar, .cps-card, .modal, .calendar-popover, #notes-drawer, #notes-toggle-btn')) {
                 return;
             }
 
@@ -731,55 +909,57 @@
             clickTimestamps.push(Date.now());
             updateCPS();
 
-            // Water ripple disturbance on click disabled per user request
-            // Only click shockwave rings are generated below
-
+            // Calculate max radius so the ring touches all edges of the screen
             const maxRadius = Math.hypot(
                 Math.max(e.clientX, window.innerWidth - e.clientX),
                 Math.max(e.clientY, window.innerHeight - e.clientY)
             );
 
+            // Single expanding blue-green circle
             clickRings.push({
                 x: e.clientX,
                 y: e.clientY,
                 radius: 4,
                 maxRadius: maxRadius,
-                hue: Math.floor(Math.random() * 120 + 150)
+                hue: Math.floor(Math.random() * 20 + 165), // Vibrant blue-green / cyan spectrum
+                energy: 1.0,
+                fadeSpeed: 1.0,
+                bouncedRings: new Set()
             });
         });
 
         function renderWaterSimulation() {
-            // Multi-step solver iteration for fast wave movement
             const iterations = 2;
-            const dampening = 0.945; // Rapid dissipation
-            const data = imgData.data;
+            const dampening = 0.92; // Stronger dampening causes water waves to dissipate extremely quickly
 
             auroraPhase += 0.015;
 
             for (let iter = 0; iter < iterations; iter++) {
-                for (let y = 1; y < height - 1; y++) {
-                    for (let x = 1; x < width - 1; x++) {
-                        const index = y * width + x;
+                // Wave Differential Equation Solver on extended grid
+                for (let y = 1; y < simHeight - 1; y++) {
+                    for (let x = 1; x < simWidth - 1; x++) {
+                        const index = y * simWidth + x;
 
-                        buffer2[index] = (
+                        let wave = (
                             buffer1[index - 1] +
                             buffer1[index + 1] +
-                            buffer1[index - width] +
-                            buffer1[index + width]
+                            buffer1[index - simWidth] +
+                            buffer1[index + simWidth]
                         ) / 2 - buffer2[index];
 
-                        buffer2[index] *= dampening;
+                        wave *= dampening;
+                        buffer2[index] = wave;
                     }
                 }
 
-                // Absorb boundaries completely to prevent bouncing
-                for (let x = 0; x < width; x++) {
-                    buffer2[x] = 0;
-                    buffer2[(height - 1) * width + x] = 0;
+                // Seamless Passthrough Border Conditions at far outer boundary
+                for (let x = 0; x < simWidth; x++) {
+                    buffer2[x] = buffer2[simWidth + x] * 0.96;
+                    buffer2[(simHeight - 1) * simWidth + x] = buffer2[(simHeight - 2) * simWidth + x] * 0.96;
                 }
-                for (let y = 0; y < height; y++) {
-                    buffer2[y * width] = 0;
-                    buffer2[y * width + (width - 1)] = 0;
+                for (let y = 0; y < simHeight; y++) {
+                    buffer2[y * simWidth] = buffer2[y * simWidth + 1] * 0.96;
+                    buffer2[y * simWidth + (simWidth - 1)] = buffer2[y * simWidth + (simWidth - 2)] * 0.96;
                 }
 
                 const temp = buffer1;
@@ -787,18 +967,22 @@
                 buffer2 = temp;
             }
 
-            // Render Shading & Aurora Color Phase
-            for (let y = 1; y < height - 1; y++) {
-                for (let x = 1; x < width - 1; x++) {
-                    const index = y * width + x;
+            const data = imgData.data;
+
+            // Render Shading & Aurora Color Phase for visible viewport pixels only
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const simX = x + marginOffset;
+                    const simY = y + marginOffset;
+                    const index = simY * simWidth + simX;
+
                     const xGrad = buffer1[index - 1] - buffer1[index + 1];
-                    const yGrad = buffer1[index - width] - buffer1[index + width];
+                    const yGrad = buffer1[index - simWidth] - buffer1[index + simWidth];
 
                     const val = xGrad + yGrad;
-                    const pixelIdx = index * 4;
+                    const pixelIdx = (y * width + x) * 4;
 
-                    if (Math.abs(val) > 0.1) {
-                        // Dynamic Aurora Gradient Shifts
+                    if (Math.abs(val) > 0.05) {
                         const waveFactor = Math.sin(auroraPhase + (x + y) * 0.02);
                         const r = Math.min(255, Math.max(0, 6 + val * (1.2 + waveFactor * 0.5)));
                         const g = Math.min(255, Math.max(0, 15 + val * (2.8 + waveFactor * 1.2)));
@@ -809,7 +993,6 @@
                         data[pixelIdx + 2] = b;
                         data[pixelIdx + 3] = 255;
                     } else {
-                        // Dark background base
                         data[pixelIdx] = 6;
                         data[pixelIdx + 1] = 9;
                         data[pixelIdx + 2] = 14;
@@ -820,24 +1003,75 @@
 
             ctx.putImageData(imgData, 0, 0);
 
-            // Expanding Shockwave Circles on Click
+            // FPS Calculation Loop
+            frameCount++;
+            const nowTime = performance.now();
+            if (nowTime - lastFpsTime >= 1000) {
+                const currentFps = Math.round((frameCount * 1000) / (nowTime - lastFpsTime));
+                fpsDisplay.textContent = currentFps;
+                frameCount = 0;
+                lastFpsTime = nowTime;
+            }
+
+            // Wave-on-Wave Bounce Detection Logic
+            for (let i = 0; i < clickRings.length; i++) {
+                for (let j = i + 1; j < clickRings.length; j++) {
+                    const ringA = clickRings[i];
+                    const ringB = clickRings[j];
+
+                    const dx = ringB.x - ringA.x;
+                    const dy = ringB.y - ringA.y;
+                    const centerDist = Math.hypot(dx, dy);
+
+                    // Check if wavefront circles are colliding/intersecting
+                    const combinedRadius = ringA.radius + ringB.radius;
+                    const radiusDiff = Math.abs(ringA.radius - ringB.radius);
+
+                    if (centerDist <= combinedRadius && centerDist >= radiusDiff) {
+                        if (!ringA.bouncedRings.has(ringB) && !ringB.bouncedRings.has(ringA)) {
+                            ringA.bouncedRings.add(ringB);
+                            ringB.bouncedRings.add(ringA);
+
+                            // Increase decay/fade speed after bouncing off another wave
+                            ringA.fadeSpeed *= 1.85;
+                            ringB.fadeSpeed *= 1.85;
+
+                            // Dampen total wave energy on collision bounce
+                            ringA.energy *= 0.75;
+                            ringB.energy *= 0.75;
+
+                            // Fluid displacement interference pulse at collision center
+                            const midX = Math.floor((ringA.x + ringB.x) / (2 * scale));
+                            const midY = Math.floor((ringA.y + ringB.y) / (2 * scale));
+                            disturbWater(midX, midY, 320, 3);
+                        }
+                    }
+                }
+            }
+
+            // Expanding Shockwave Circles on Click (Smooth Overlap Blending)
             ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            
             for (let i = clickRings.length - 1; i >= 0; i--) {
                 const ring = clickRings[i];
-                ring.radius += 24.0; // Fast ring expansion
+                
+                const remainingProgress = Math.max(0, 1 - (ring.radius / ring.maxRadius));
+                const currentSpeed = (8.0 + (18.0 * remainingProgress));
+                ring.radius += currentSpeed;
 
                 const progress = ring.radius / ring.maxRadius;
                 const alpha = Math.max(0, 0.85 * (1 - progress));
 
-                if (alpha <= 0 || ring.radius >= ring.maxRadius) {
+                if (alpha <= 0.01 || ring.radius >= ring.maxRadius) {
                     clickRings.splice(i, 1);
                     continue;
                 }
 
-                ctx.lineWidth = 2.5;
-                ctx.strokeStyle = `hsla(${ring.hue}, 90%, 60%, ${alpha})`;
-                ctx.shadowColor = `hsla(${ring.hue}, 100%, 50%, 0.8)`;
-                ctx.shadowBlur = 16;
+                ctx.lineWidth = Math.max(1.5, 3.5 * (1 - progress * 0.5));
+                ctx.strokeStyle = `hsla(${ring.hue}, 95%, 55%, ${alpha})`;
+                ctx.shadowColor = `hsla(${ring.hue}, 100%, 50%, ${alpha * 0.9})`;
+                ctx.shadowBlur = 14;
 
                 ctx.beginPath();
                 ctx.arc(ring.x / scale, ring.y / scale, ring.radius / scale, 0, Math.PI * 2);
@@ -1056,23 +1290,6 @@
             e.stopPropagation();
             currCalDate.setMonth(currCalDate.getMonth() + 1);
             renderCalendar();
-        });
-
-        // Search Bar Logic
-        const searchInput = document.getElementById('search-input');
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                if (query) {
-                    if (query.startsWith('http://') || query.startsWith('https://')) {
-                        window.location.href = query;
-                    } else if (query.includes('.') && !query.includes(' ')) {
-                        window.location.href = 'https://' + query;
-                    } else {
-                        window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                    }
-                }
-            }
         });
 
         // Shortcuts & Edge Dock Manager
