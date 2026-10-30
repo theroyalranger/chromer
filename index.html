@@ -1,618 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Royal Chromer</title>
-  <!-- FontAwesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<!-- ... existing code ... -->
+    <script>
+        // Interactive Fluid & Color Simulation
+        const canvas = document.getElementById('water-canvas');
+        const ctx = canvas.getContext('2d');
 
-    body {
-      background-color: #000000;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      color: #ffffff;
-      overflow: hidden;
-      position: relative;
-    }
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-    /* Fullscreen Fluid Water Canvas */
-    #waterCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
+        // Grid resolution for fluid simulation
+        const gridScale = 12;
+        let cols = Math.floor(width / gridScale);
+        let rows = Math.floor(height / gridScale);
 
-    /* Center layout container */
-    .center-wrapper {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        let grid = [];
+        let prevGrid = [];
 
-    .central-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 10;
-      width: 100%;
-      max-width: 420px;
-      padding: 15px;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-      text-align: center;
-    }
-
-    /* Search Bar Form */
-    .search-form {
-      width: 100%;
-      position: relative;
-      margin-bottom: 0.8rem;
-    }
-
-    .search-input-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 50px;
-      padding: 6px 12px 6px 18px;
-      backdrop-filter: blur(12px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    }
-
-    .search-input-wrapper:focus-within {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-    }
-
-    .search-icon {
-      color: #9ca3af;
-      font-size: 0.95rem;
-      margin-right: 10px;
-    }
-
-    .search-input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #ffffff;
-      font-size: 0.92rem;
-      font-weight: 500;
-    }
-
-    .search-input::placeholder {
-      color: #6b7280;
-    }
-
-    .search-button {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #ffffff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      margin-left: 6px;
-    }
-
-    .search-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Add New Button (Directly beneath search bar center) */
-    .add-new-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px dashed rgba(255, 255, 255, 0.3);
-      border-radius: 30px;
-      color: #a1a1aa;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .add-new-btn:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: #60a5fa;
-      color: #ffffff;
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-    }
-
-    /* Circular Orbit Ring for Shortcuts */
-    .orbit-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    /* Circular Pill Buttons - Absolutely placed in orbit */
-    .btn {
-      position: absolute;
-      pointer-events: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      margin-left: -32px;
-      margin-top: -32px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 50%;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .btn i, .btn img {
-      font-size: 1.25rem;
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      margin-bottom: 2px;
-    }
-
-    .btn span {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      opacity: 0.9;
-      max-width: 52px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: center;
-    }
-
-    /* Glow-only hover states (No movement) */
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: #ffffff;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    }
-
-    /* Delete badge for user-added shortcuts */
-    .delete-btn {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      width: 18px;
-      height: 18px;
-      background: #ef4444;
-      color: #ffffff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s ease, background 0.2s ease;
-      border: none;
-    }
-
-    .btn:hover .delete-btn {
-      opacity: 1;
-    }
-
-    .delete-btn:hover {
-      background: #dc2626;
-    }
-
-    /* Add Shortcut Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: rgba(20, 20, 25, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 28px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    }
-
-    .modal h2 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 15px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      color: #ffffff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    .modal input:focus {
-      border-color: #60a5fa;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .modal-btn {
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .modal-btn.cancel {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-    }
-
-    .modal-btn.save {
-      background: #3b82f6;
-      color: #ffffff;
-    }
-  </style>
-</head>
-<body>
-  <!-- Canvas background for liquid simulation -->
-  <canvas id="waterCanvas"></canvas>
-
-  <div class="center-wrapper">
-    <!-- Center Column -->
-    <div class="central-box">
-      <h1>The Royal Chromer</h1>
-
-      <!-- Search Bar -->
-      <form class="search-form" action="https://www.google.com/search" method="GET">
-        <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" name="q" class="search-input" placeholder="Search Google or type a URL..." autofocus autocomplete="off">
-          <button type="submit" class="search-button" aria-label="Search">
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      </form>
-
-      <!-- Add New Button placed directly below Search Bar Center -->
-      <button class="add-new-btn" id="openModalBtn">
-        <i class="fa-solid fa-plus"></i>
-        <span>Add Shortcut</span>
-      </button>
-    </div>
-
-    <!-- Outer Circular Ring Orbit for Websites -->
-    <div class="orbit-container" id="orbitContainer"></div>
-  </div>
-
-  <!-- Modal for Adding Custom Shortcuts -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h2>Add New Shortcut</h2>
-      <input type="text" id="shortcutTitle" placeholder="Shortcut Name (e.g. Twitch)">
-      <input type="url" id="shortcutUrl" placeholder="URL (e.g. https://twitch.tv)">
-      <div class="modal-actions">
-        <button class="modal-btn cancel" id="closeModalBtn">Cancel</button>
-        <button class="modal-btn save" id="saveShortcutBtn">Add</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Initial built-in shortcuts
-    const defaultShortcuts = [
-      { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-brands fa-youtube', color: '#ff4e4e' },
-      { name: 'Aternos', url: 'https://aternos.org', icon: 'fa-solid fa-server', color: '#60a5fa' },
-      { name: 'Chunkbase', url: 'https://chunkbase.com', icon: 'fa-solid fa-cubes', color: '#34d399' },
-      { name: 'Google Chat', url: 'https://chat.google.com', icon: 'fa-solid fa-comment-dots', color: '#4ade80' },
-      { name: 'Google Meet', url: 'https://meet.google.com', icon: 'fa-solid fa-video', color: '#2dd4bf' },
-      { name: 'Gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope', color: '#f87171' },
-      { name: 'Drive', url: 'https://drive.google.com', icon: 'fa-solid fa-hard-drive', color: '#fbbf24' },
-      { name: 'Docs', url: 'https://docs.google.com', icon: 'fa-solid fa-file-lines', color: '#60a5fa' },
-      { name: 'Earth', url: 'https://earth.google.com', icon: 'fa-solid fa-globe-americas', color: '#38bdf8' },
-      { name: 'GitHub', url: 'https://github.com', icon: 'fa-brands fa-github', color: '#e4e4e7' },
-      { name: 'Wikipedia', url: 'https://wikipedia.org', icon: 'fa-solid fa-book', color: '#cbd5e1' },
-      { name: 'ChatGPT', url: 'https://chatgpt.com', icon: 'fa-solid fa-robot', color: '#2dd4bf' }
-    ];
-
-    const orbitContainer = document.getElementById('orbitContainer');
-
-    function getCustomShortcuts() {
-      return JSON.parse(localStorage.getItem('royal_chromer_shortcuts') || '[]');
-    }
-
-    function saveCustomShortcuts(list) {
-      localStorage.setItem('royal_chromer_shortcuts', JSON.stringify(list));
-    }
-
-    // Render orbital circle surrounding central box without overlapping search bar
-    function renderOrbit() {
-      orbitContainer.innerHTML = '';
-      const customList = getCustomShortcuts();
-      const allShortcuts = [...defaultShortcuts, ...customList];
-
-      const total = allShortcuts.length;
-      if (total === 0) return;
-
-      const radius = Math.min(230, window.innerWidth * 0.32, window.innerHeight * 0.35);
-      const angleStep = (2 * Math.PI) / total;
-      const startAngle = -Math.PI / 2;
-
-      allShortcuts.forEach((item, index) => {
-        const angle = startAngle + index * angleStep;
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-
-        const a = document.createElement('a');
-        a.className = 'btn';
-        a.href = item.url;
-        a.target = '_blank';
-        a.title = item.name;
-        a.style.left = `${x}px`;
-        a.style.top = `${y}px`;
-
-        if (item.icon) {
-          a.innerHTML = `<i class="${item.icon}" style="color: ${item.color || '#fff'};"></i><span>${item.name}</span>`;
-        } else {
-          const domain = new URL(item.url).hostname;
-          a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=64" alt="${item.name}" onerror="this.src='https://placehold.co/32/3b82f6/fff?text=?'"><span>${item.name}</span>`;
+        function initGrid() {
+            cols = Math.floor(width / gridScale);
+            rows = Math.floor(height / gridScale);
+            grid = new Array(cols).fill(0).map(() => new Array(rows).fill(0));
+            prevGrid = new Array(cols).fill(0).map(() => new Array(rows).fill(0));
         }
 
-        if (index >= defaultShortcuts.length) {
-          const customIdx = index - defaultShortcuts.length;
-          const delBtn = document.createElement('button');
-          delBtn.className = 'delete-btn';
-          delBtn.innerHTML = '×';
-          delBtn.title = 'Remove Shortcut';
-          delBtn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            removeCustomShortcut(customIdx);
-          };
-          a.appendChild(delBtn);
+        initGrid();
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initGrid();
+        });
+
+        // Fluid Color Particles
+        class FluidParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 24 + 16;
+                this.color = color;
+                this.life = 1.0;
+                this.decay = Math.random() * 0.015 + 0.008;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.life * 0.45;
+                ctx.beginPath();
+                const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                grad.addColorStop(0, this.color);
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
         }
 
-        orbitContainer.appendChild(a);
-      });
-    }
+        let particles = [];
+        const colors = [
+            'rgba(66, 133, 244, 0.8)',  // Blue
+            'rgba(121, 40, 202, 0.8)',  // Purple
+            'rgba(0, 223, 216, 0.8)',   // Cyan
+            'rgba(234, 67, 53, 0.7)'    // Red accent
+        ];
 
-    function removeCustomShortcut(index) {
-      const list = getCustomShortcuts();
-      list.splice(index, 1);
-      saveCustomShortcuts(list);
-      renderOrbit();
-    }
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        let lastMouseX = mouseX;
+        let lastMouseY = mouseY;
+        let colorIdx = 0;
 
-    // Modal Interaction Logic
-    const modalOverlay = document.getElementById('modalOverlay');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const saveShortcutBtn = document.getElementById('saveShortcutBtn');
-    const shortcutTitleInput = document.getElementById('shortcutTitle');
-    const shortcutUrlInput = document.getElementById('shortcutUrl');
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
 
-    openModalBtn.addEventListener('click', () => {
-      modalOverlay.classList.add('active');
-      shortcutTitleInput.focus();
-    });
+            const dx = mouseX - lastMouseX;
+            const dy = mouseY - lastMouseY;
+            const speed = Math.sqrt(dx * dx + dy * dy);
 
-    closeModalBtn.addEventListener('click', () => {
-      modalOverlay.classList.remove('active');
-    });
+            // Inject wave energy into grid
+            const gx = Math.floor(mouseX / gridScale);
+            const gy = Math.floor(mouseY / gridScale);
 
-    saveShortcutBtn.addEventListener('click', () => {
-      const name = shortcutTitleInput.value.trim();
-      let url = shortcutUrlInput.value.trim();
+            if (gx > 1 && gx < cols - 2 && gy > 1 && gy < rows - 2) {
+                grid[gx][gy] += Math.min(speed * 12, 400);
+                grid[gx + 1][gy] += Math.min(speed * 6, 200);
+                grid[gx - 1][gy] += Math.min(speed * 6, 200);
+                grid[gx][gy + 1] += Math.min(speed * 6, 200);
+                grid[gx][gy - 1] += Math.min(speed * 6, 200);
+            }
 
-      if (!name || !url) return;
-      if (!/^https?:\/\//i.test(url)) {
-        url = 'https://' + url;
-      }
+            // Spawn fluid color particles
+            if (speed > 2) {
+                colorIdx = (colorIdx + 1) % colors.length;
+                const p = new FluidParticle(mouseX, mouseY, colors[colorIdx]);
+                p.vx = dx * 0.15;
+                p.vy = dy * 0.15;
+                particles.push(p);
 
-      const list = getCustomShortcuts();
-      list.push({ name, url });
-      saveCustomShortcuts(list);
+                if (particles.length > 80) particles.shift();
+            }
 
-      shortcutTitleInput.value = '';
-      shortcutUrlInput.value = '';
-      modalOverlay.classList.remove('active');
-      renderOrbit();
-    });
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        });
 
-    renderOrbit();
+        // Water ripple propagation algorithm
+        function updateWaterGrid() {
+            for (let i = 1; i < cols - 1; i++) {
+                for (let j = 1; j < rows - 1; j++) {
+                    const current = (
+                        prevGrid[i - 1][j] +
+                        prevGrid[i + 1][j] +
+                        prevGrid[i][j - 1] +
+                        prevGrid[i][j + 1]
+                    ) / 2 - grid[i][j];
 
-    // Colored Water Physics Simulation
-    const canvas = document.getElementById('waterCanvas');
-    const ctx = canvas.getContext('2d');
+                    grid[i][j] = current * 0.95; // Damping
+                }
+            }
 
-    let width, height;
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const mouse = { x: -1000, y: -1000, vx: 0, vy: 0, px: -1000, py: -1000 };
-
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      mouse.vx = (mouse.x - mouse.px) * 0.3;
-      mouse.vy = (mouse.y - mouse.py) * 0.3;
-      mouse.px = mouse.x;
-      mouse.py = mouse.y;
-
-      const speed = Math.hypot(mouse.vx, mouse.vy);
-      const count = Math.min(Math.floor(speed * 1.5) + 2, 8);
-      for (let i = 0; i < count; i++) {
-        particles.push(createLiquidParticle(mouse.x, mouse.y, mouse.vx, mouse.vy));
-      }
-    });
-
-    const colorPalette = [
-      { r: 0, g: 162, b: 255 },
-      { r: 99, g: 102, b: 241 },
-      { r: 168, g: 85, b: 247 },
-      { r: 16, g: 185, b: 129 }
-    ];
-
-    let colorIndex = 0;
-    const particles = [];
-
-    function createLiquidParticle(x, y, vx, vy) {
-      colorIndex = (colorIndex + 0.1) % colorPalette.length;
-      const c1 = colorPalette[Math.floor(colorIndex)];
-      const c2 = colorPalette[(Math.floor(colorIndex) + 1) % colorPalette.length];
-      const factor = colorIndex % 1;
-
-      const r = Math.round(c1.r + (c2.r - c1.r) * factor);
-      const g = Math.round(c1.g + (c2.g - c1.g) * factor);
-      const b = Math.round(c1.b + (c2.b - c1.b) * factor);
-
-      const angle = Math.random() * Math.PI * 2;
-      const spread = Math.random() * 2 + 0.5;
-
-      return {
-        x: x + (Math.random() - 0.5) * 20,
-        y: y + (Math.random() - 0.5) * 20,
-        vx: vx * 0.4 + Math.cos(angle) * spread,
-        vy: vy * 0.4 + Math.sin(angle) * spread,
-        radius: Math.random() * 30 + 20,
-        maxRadius: Math.random() * 80 + 50,
-        life: 1,
-        decay: Math.random() * 0.02 + 0.025,
-        r, g, b,
-        swirl: (Math.random() - 0.5) * 0.04
-      };
-    }
-
-    function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-      ctx.fillRect(0, 0, width, height);
-
-      mouse.vx *= 0.9;
-      mouse.vy *= 0.9;
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        const tempVx = p.vx;
-        p.vx = p.vx * Math.cos(p.swirl) - p.vy * Math.sin(p.swirl);
-        p.vy = tempVx * Math.sin(p.swirl) + p.vy * Math.cos(p.swirl);
-
-        p.vx *= 0.94;
-        p.vy *= 0.94;
-
-        if (p.radius < p.maxRadius) {
-          p.radius += 0.6;
+            // Swap grids
+            const temp = prevGrid;
+            prevGrid = grid;
+            grid = temp;
         }
 
-        p.life -= p.decay;
+        function renderFluid() {
+            ctx.fillStyle = 'rgba(13, 17, 23, 0.25)';
+            ctx.fillRect(0, 0, width, height);
 
-        if (p.life <= 0) {
-          particles.splice(i, 1);
-          continue;
+            // Update & draw liquid particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Render water ripples
+            updateWaterGrid();
+
+            ctx.lineWidth = 1;
+            for (let i = 1; i < cols - 1; i++) {
+                for (let j = 1; j < rows - 1; j++) {
+                    const val = grid[i][j];
+                    if (Math.abs(val) > 0.5) {
+                        const x = i * gridScale;
+                        const y = j * gridScale;
+                        const alpha = Math.min(Math.abs(val) / 200, 0.4);
+
+                        ctx.strokeStyle = val > 0 
+                            ? `rgba(66, 133, 244, ${alpha})` 
+                            : `rgba(0, 223, 216, ${alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(x, y, Math.min(Math.abs(val) * 0.08, gridScale * 1.5), 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(renderFluid);
         }
 
-        ctx.save();
-        ctx.globalCompositeOperation = 'screen';
-        
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        const alpha = p.life * 0.5;
-        
-        gradient.addColorStop(0, `rgba(${p.r}, ${p.g}, ${p.b}, ${alpha})`);
-        gradient.addColorStop(0.5, `rgba(${p.r}, ${p.g}, ${p.b}, ${alpha * 0.3})`);
-        gradient.addColorStop(1, `rgba(${p.r}, ${p.g}, ${p.b}, 0)`);
+        renderFluid();
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  </script>
-</body>
-</html>
+        // Search Bar Logic
+<!-- ... existing code ... -->
