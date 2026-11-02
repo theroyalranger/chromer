@@ -17,6 +17,13 @@
 }
 },
 "forwardPorts": [3000],
+"portsAttributes": {
+"3000": {
+"label": "Application Port",
+"onAutoForward": "notify",
+"elevateIfNeeded": true
+}
+},
 "postCreateCommand": "echo 'Dev container initialized successfully.'",
 "runArgs": [
 "--init"
