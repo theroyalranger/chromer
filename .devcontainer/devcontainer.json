@@ -1,16 +1,27 @@
 {
-"name": "The Royal Chromer",
+"name": "The Royal Chromer Dev Container",
 "image": "mcr.microsoft.com/devcontainers/universal:2",
-"containerEnv": {
-"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --allow-file-access-from-files --disable-web-security"
-},
-"postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html",
 "customizations": {
 "vscode": {
+"settings": {
+"terminal.integrated.profiles.linux": {
+"bash": {
+"path": "bash",
+"icon": "terminal-bash"
+}
+}
+},
 "extensions": [
 "ms-azuretools.vscode-docker"
 ]
 }
 },
-"forwardPorts": [8080]
+"forwardPorts": [3000],
+"postCreateCommand": "echo 'Dev container initialized successfully.'",
+"runArgs": [
+"--init"
+],
+"containerEnv": {
+"CHROME_FLAGS": "--remote-debugging-port=9222 --no-sandbox --allow-file-access-from-files"
+}
 }
