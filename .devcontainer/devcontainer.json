@@ -2,17 +2,13 @@
 "name": "The Royal Chromer",
 "image": "mcr.microsoft.com/devcontainers/universal:2",
 "containerEnv": {
-"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --allow-file-access-from-files --disable-web-security --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --disable-ipc-flooding-protection --enable-features=ParallelDownloading,CanvasOopRasterization"
+"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --allow-file-access-from-files --disable-web-security"
 },
 "postStartCommand": "cp ${containerWorkspaceFolder}/index.html /defaults/index.html",
 "customizations": {
 "vscode": {
-"settings": {
-"editor.formatOnSave": true
-},
 "extensions": [
-"formulahendry.auto-close-tag",
-"formulahendry.auto-rename-tag"
+"ms-azuretools.vscode-docker"
 ]
 }
 },
