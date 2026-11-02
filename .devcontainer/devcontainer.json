@@ -1,44 +1,38 @@
 {
-  "name": "The Royal Chromer",
-  "image": "lscr.io/linuxserver/chrome:latest",
-  "remoteUser": "root",
-  "containerUser": "root",
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "16gb"
-  },
-  "overrideCommand": false,
-  "containerEnv": {
-    "SELKIES_FRAMERATE": "30-60",
-    "SELKIES_ENCODER": "h264",
-    "SELKIES_H264_CRF": "28",
-    "SELKIES_MANUAL_WIDTH": "1280",
-    "SELKIES_MANUAL_HEIGHT": "720",
-    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CSSContainerQueries,LayoutNG --disable-features=IsolateOrigins,site-per-process --disable-web-security"
-  },
-  "postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && ln -sf ${containerWorkspaceFolder}/index.html /defaults/index.html && echo \"{\\\"ExtensionInstallForcelist\\\":[\\\"icpgjfnebeeeiningbccagbaeagobmkg;https://clients2.google.com/service/update2/crx\\\"],\\\"HomepageLocation\\\":\\\"file:///defaults/index.html\\\",\\\"NewTabPageLocation\\\":\\\"file:///defaults/index.html\\\"}\" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
-  "forwardPorts": [3000],
-  "portsAttributes": {
-    "3000": {
-      "label": "The Royal Chromer",
-      "onAutoForward": "notify"
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "editor.formatOnSave": true
-      },
-      "extensions": [
-        "formulahendry.auto-close-tag",
-        "formulahendry.auto-rename-tag"
-      ]
-    }
-  }
+"name": "The Royal Chromer",
+"image": "lscr.io/linuxserver/chrome:latest",
+"remoteUser": "root",
+"containerUser": "root",
+"hostRequirements": {
+"cpus": 4,
+"memory": "16gb"
+},
+"overrideCommand": false,
+"containerEnv": {
+"SELKIES_FRAMERATE": "30-60",
+"SELKIES_ENCODER": "h264",
+"SELKIES_H264_CRF": "28",
+"SELKIES_MANUAL_WIDTH": "1280",
+"SELKIES_MANUAL_HEIGHT": "720",
+"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading"
+},
+"postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && ln -sf ${containerWorkspaceFolder}/index.html /defaults/index.html && echo "{\"ExtensionInstallForcelist\":[\"icpgjfnebeeeiningbccagbaeagobmkg;https://clients2.google.com/service/update2/crx\"],\"HomepageLocation\":\"file:///defaults/index.html\",\"NewTabPageLocation\":\"file:///defaults/index.html\"}" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
+"forwardPorts": [3000],
+"portsAttributes": {
+"3000": {
+"label": "The Royal Chromer",
+"onAutoForward": "notify"
 }
-```eof
-
-### Summary of Fixes:
-- Added Blink layout feature flags (`LayoutNG`, `CSSContainerQueries`) to correctly render modern CSS flex/grid layouts used by Aternos.
-- Relaxed cross-process isolation constraints (`IsolateOrigins`, `site-per-process`) so dynamic dashboard widgets and external iframe resources calculate dimensions properly.
-- Kept root privileges and subshell execution active to prevent any recovery mode issues on Codespace creation.
+},
+"customizations": {
+"vscode": {
+"settings": {
+"editor.formatOnSave": true
+},
+"extensions": [
+"formulahendry.auto-close-tag",
+"formulahendry.auto-rename-tag"
+]
+}
+}
+}
