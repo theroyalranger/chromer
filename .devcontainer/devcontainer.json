@@ -1,17 +1,33 @@
-"containerEnv": {
-"SELKIES_FRAMERATE": "30-60",
-"SELKIES_ENCODER": "h264",
-"SELKIES_H264_CRF": "28",
-"SELKIES_MANUAL_WIDTH": "1280",
-"SELKIES_MANUAL_HEIGHT": "720",
-"CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CSSContainerQueries --disable-features=IsolateOrigins,site-per-process"
-},
-"postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && find /workspaces -name index.html -exec ln -sf {} /defaults/index.html \; && printf "{\n  \"HomepageLocation\": \"file:///defaults/index.html\",\n  \"NewTabPageLocation\": \"file:///defaults/index.html\"\n}\n" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
-"forwardPorts": [3000],
-"portsAttributes": {
-"3000": {
-"label": "The Royal Chromer",
-"onAutoForward": "notify"
+{
+  "name": "The Royal Chromer",
+  "image": "lscr.io/linuxserver/chrome:latest",
+  "remoteUser": "root",
+  "containerUser": "root",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb"
+  },
+  "overrideCommand": false,
+  "containerEnv": {
+    "SELKIES_FRAMERATE": "30-60",
+    "SELKIES_ENCODER": "h264",
+    "SELKIES_H264_CRF": "28",
+    "SELKIES_MANUAL_WIDTH": "1280",
+    "SELKIES_MANUAL_HEIGHT": "720",
+    "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CSSContainerQueries --disable-features=IsolateOrigins,site-per-process"
+  },
+  "postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && find /workspaces -name index.html -exec ln -sf {} /defaults/index.html \\; && echo \"{\\\"HomepageLocation\\\": \\\"file:///defaults/index.html\\\", \\\"NewTabPageLocation\\\": \\\"file:///defaults/index.html\\\"}\" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "The Royal Chromer",
+      "onAutoForward": "notify"
+    }
+  }
 }
-}
-}
+```eof
+
+### How to test:
+1. Save this updated file.
+2. Check that all red syntax error highlights in the editor are gone.
+3. Open the Command Palette (`Ctrl + Shift + P` or `Cmd + Shift + P` on Mac) and select **`Codespaces: Rebuild Container`**.
