@@ -25,9 +25,3 @@
     }
   }
 }
-```eof
-
-### How to test:
-1. Save this updated file.
-2. Check that all red syntax error highlights in the editor are gone.
-3. Open the Command Palette (`Ctrl + Shift + P` or `Cmd + Shift + P` on Mac) and select **`Codespaces: Rebuild Container`**.
