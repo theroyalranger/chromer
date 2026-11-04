@@ -16,7 +16,7 @@
 "SELKIES_MANUAL_HEIGHT": "720",
 "CHROME_CLI": "file:///defaults/index.html --homepage file:///defaults/index.html --force-device-scale-factor=1 --high-dpi-support=1 --disable-lcd-text --ignore-gpu-blocklist --enable-webgl --enable-webgl2-compute-context --use-gl=swiftshader --enable-unsafe-swiftshader --disable-gpu-sandbox --enable-zero-copy --num-raster-threads=4 --disable-smooth-scrolling --disable-background-networking --disable-component-update --enable-features=ParallelDownloading,CSSContainerQueries --disable-features=IsolateOrigins,site-per-process"
 },
-"postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && ln -sf ${containerWorkspaceFolder}/index.html /defaults/index.html && echo "{\"ExtensionInstallForcelist\":[\"icpgjfnebeeeiningbccagbaeagobmkg;https://clients2.google.com/service/update2/crx\"],\"HomepageLocation\":\"file:///defaults/index.html\",\"NewTabPageLocation\":\"file:///defaults/index.html\"}" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
+"postStartCommand": "sh -c 'mkdir -p /defaults /etc/opt/chrome/policies/managed && find /workspaces -name index.html -exec ln -sf {} /defaults/index.html \; && echo "{\"HomepageLocation\":\"file:///defaults/index.html\",\"NewTabPageLocation\":\"file:///defaults/index.html\"}" > /etc/opt/chrome/policies/managed/custom_start_page.json'",
 "forwardPorts": [3000],
 "portsAttributes": {
 "3000": {
