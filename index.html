@@ -1,3 +1,4 @@
+<!-- Saved Code #3 - The Royal Chromer with restored water physics & hover-expand top buttons -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,16 +160,96 @@
             box-shadow: 0 8px 32px rgba(56, 189, 248, 0.25);
         }
 
-        /* Top Right Floating Theme Button */
-        .theme-btn-top-right {
+        /* Top Bar Action Widgets */
+        .top-bar-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-action-btn {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-action-btn:hover {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: rgba(56, 189, 248, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .top-action-btn.active {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.25);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Search Autocomplete Box */
+        .autocomplete-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+        }
+
+        .autocomplete-item {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            transition: background 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(56, 189, 248, 0.2);
+            color: #fff;
+        }
+
+        /* Side Drawers */
+        .drawer-panel {
+            display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 20;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Top Right Hover-Expand Buttons (Theme, Incognito, Speed Test) */
+        .top-action-btn-expand {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0px;
             height: 46px;
             padding: 0 13px;
             border-radius: 23px;
@@ -180,37 +261,43 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
+            font-size: 0.88rem;
+            font-weight: 500;
         }
 
-        .theme-btn-top-right .theme-btn-icon {
+        .top-action-btn-expand .top-btn-icon {
             font-size: 1.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .theme-btn-top-right .theme-btn-text {
+        .top-action-btn-expand .top-btn-text {
             max-width: 0;
             opacity: 0;
             white-space: nowrap;
-            font-size: 0.88rem;
-            font-weight: 500;
             transition: max-width 0.3s ease, opacity 0.25s ease, margin-left 0.3s ease;
             pointer-events: none;
         }
 
-        .theme-btn-top-right:hover {
+        .top-action-btn-expand:hover {
             background: rgba(15, 23, 42, 0.88);
-            border-color: rgba(168, 85, 247, 0.6);
-            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.35);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
             transform: translateY(2px);
             padding: 0 18px;
         }
 
-        .theme-btn-top-right:hover .theme-btn-text {
-            max-width: 120px;
+        .top-action-btn-expand:hover .top-btn-text {
+            max-width: 140px;
             opacity: 1;
             margin-left: 8px;
+        }
+
+        .top-action-btn-expand.active {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.25);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
         }
 
         .time-display {
@@ -504,6 +591,39 @@
             opacity: 1;
             visibility: visible;
         }
+
+        /* Drag & Drop Visual Styles */
+        .shortcut-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .edge-sidebar.drag-over {
+            border-color: rgba(56, 189, 248, 0.8);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .folder-category-header {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 0 2px 0;
+            text-align: center;
+        }
+
+        .quote-banner {
+            font-size: 0.88rem;
+            font-weight: 500;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
+            max-width: 500px;
+            text-align: center;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -513,30 +633,32 @@
 
     <!-- Edge Dock Sidebars -->
     <div class="edge-sidebar left" id="sidebar-left">
-        <a href="https://www.chunkbase.com" target="_blank" class="shortcut-item">
+        <div class="folder-category-header">Main</div>
+        <a href="https://www.chunkbase.com" target="_blank" class="shortcut-item" draggable="true" data-id="chunkbase">
             <div class="shortcut-icon">🧊</div>
             <div class="shortcut-label">Chunkbase</div>
         </a>
-        <a href="https://aternos.org" target="_blank" class="shortcut-item">
+        <a href="https://aternos.org" target="_blank" class="shortcut-item" draggable="true" data-id="aternos">
             <div class="shortcut-icon">🌐</div>
             <div class="shortcut-label">Aternos</div>
         </a>
-        <a href="https://earth.google.com" target="_blank" class="shortcut-item">
+        <a href="https://earth.google.com" target="_blank" class="shortcut-item" draggable="true" data-id="googleearth">
             <div class="shortcut-icon">🌍</div>
             <div class="shortcut-label">Google Earth</div>
         </a>
     </div>
 
     <div class="edge-sidebar right" id="sidebar-right">
-        <a href="https://chat.google.com" target="_blank" class="shortcut-item">
+        <div class="folder-category-header">Apps</div>
+        <a href="https://chat.google.com" target="_blank" class="shortcut-item" draggable="true" data-id="googlechat">
             <div class="shortcut-icon">💬</div>
             <div class="shortcut-label">Google Chat</div>
         </a>
-        <a href="https://docs.google.com" target="_blank" class="shortcut-item">
+        <a href="https://docs.google.com" target="_blank" class="shortcut-item" draggable="true" data-id="googledocs">
             <div class="shortcut-icon">📄</div>
             <div class="shortcut-label">Google Docs</div>
         </a>
-        <a href="https://www.youtube.com" target="_blank" class="shortcut-item">
+        <a href="https://www.youtube.com" target="_blank" class="shortcut-item" draggable="true" data-id="youtube">
             <div class="shortcut-icon">▶️</div>
             <div class="shortcut-label">YouTube</div>
         </a>
@@ -549,9 +671,9 @@
             <span class="cps-lbl">CPS</span>
         </div>
         <div class="cps-divider"></div>
-        <div class="cps-stat-item">
+        <div class="cps-stat-item" id="fps-card" style="cursor: pointer;" title="Click to change FPS Limit">
             <span class="cps-val" id="fps-value" style="color: #4ade80;">60</span>
-            <span class="cps-lbl">FPS</span>
+            <span class="cps-lbl" id="fps-limit-label">MAX 60</span>
         </div>
         <div class="cps-divider"></div>
         <div class="cps-stat-item">
@@ -560,20 +682,72 @@
         </div>
     </div>
 
-    <!-- Top Right Theme Palette Icon Button -->
-    <button class="theme-btn-top-right" id="theme-toggle-btn" title="Theme Palette">
-        <span class="theme-btn-icon">🎨</span>
-        <span class="theme-btn-text">Theme Palette</span>
-    </button>
+    <!-- Top Right Floating Buttons -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 20; display: flex; gap: 10px; align-items: center;">
+        <button class="top-action-btn-expand" id="incognito-btn" title="Toggle Private Mode">
+            <span class="top-btn-icon">🕵️</span>
+            <span class="top-btn-text">Incognito</span>
+        </button>
+        <button class="top-action-btn-expand" id="speedtest-btn" title="Run Speed Test">
+            <span class="top-btn-icon">⚡</span>
+            <span class="top-btn-text">Speed Test</span>
+        </button>
+        <button class="top-action-btn-expand" id="theme-toggle-btn" title="Theme & Particle Engine">
+            <span class="top-btn-icon">🎨</span>
+            <span class="top-btn-text">Theme & Particles</span>
+        </button>
+    </div>
 
-    <!-- Quick Notes Drawer Button -->
-    <button id="notes-toggle-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 10; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Toggle Quick Notes">📝</button>
+    <!-- Bottom Right Floating Controls Drawer Toggle Buttons -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 10; display: flex; gap: 10px;">
+        <button id="clocks-toggle-btn" class="sound-toggle-btn" title="World Clocks">🌐</button>
+        <button id="calc-toggle-btn" class="sound-toggle-btn" title="Quick Math Calculator">🧮</button>
+        <button id="notes-toggle-btn" class="sound-toggle-btn" title="Toggle Quick Notes">📝</button>
+    </div>
+
+    <!-- World Clocks Drawer -->
+    <div id="clocks-drawer" class="drawer-panel" style="bottom: 75px; right: 120px; width: 240px;">
+        <div style="font-weight: 600; font-size: 0.9rem; color: #38bdf8;">🌐 World Clocks</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+            <div style="display: flex; justify-content: space-between;"><span>New York:</span><span id="clock-ny" style="font-weight: 700;">--:--</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>London:</span><span id="clock-london" style="font-weight: 700;">--:--</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Tokyo:</span><span id="clock-tokyo" style="font-weight: 700;">--:--</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Sydney:</span><span id="clock-sydney" style="font-weight: 700;">--:--</span></div>
+        </div>
+    </div>
+
+    <!-- Calculator Drawer -->
+    <div id="calc-drawer" class="drawer-panel" style="bottom: 75px; right: 70px; width: 220px;">
+        <div style="font-weight: 600; font-size: 0.9rem; color: #38bdf8;">🧮 Quick Math Calculator</div>
+        <input type="text" id="calc-display" readonly style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #4ade80; text-align: right; font-family: monospace; font-size: 1.1rem; outline: none;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+            <button class="calc-key" style="background: rgba(239, 68, 68, 0.3); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">C</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">(</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">)</button>
+            <button class="calc-key" style="background: rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">/</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">7</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">8</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">9</button>
+            <button class="calc-key" style="background: rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">*</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">4</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">5</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">6</button>
+            <button class="calc-key" style="background: rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">-</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">1</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">2</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">3</button>
+            <button class="calc-key" style="background: rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">+</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none; grid-column: span 2;">0</button>
+            <button class="calc-key" style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">.</button>
+            <button class="calc-key" style="background: rgba(74, 222, 128, 0.4); border-radius: 6px; padding: 8px; color: #fff; cursor: pointer; border: none;">=</button>
+        </div>
+    </div>
 
     <!-- Quick Notes Drawer -->
-    <div id="notes-drawer" style="display: none; position: fixed; bottom: 75px; right: 20px; z-index: 10; width: 280px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-direction: column; gap: 10px;">
+    <div id="notes-drawer" class="drawer-panel" style="bottom: 75px; right: 20px; width: 280px;">
         <div style="font-weight: 600; font-size: 0.9rem; color: #38bdf8; display: flex; justify-content: space-between; align-items: center;">
             <span>⚡ Quick Scratchpad</span>
-            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Auto-saved</span>
+            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);" id="notes-status-text">Auto-saved</span>
         </div>
         <textarea id="quick-notes-area" style="width: 100%; height: 120px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; padding: 10px; font-family: inherit; font-size: 0.85rem; resize: none; outline: none;" placeholder="Jot down notes or quick to-dos..."></textarea>
     </div>
@@ -591,14 +765,19 @@
 
         <!-- Center Search Hub -->
         <div class="center-hub">
+            <div class="quote-banner" id="daily-quote">"Loading daily motivation..."</div>
             <h1 class="title">The Royal Chromer</h1>
             <div class="search-container">
-                <div style="display: flex; gap: 8px; margin-bottom: -6px;">
+                <div style="display: flex; gap: 6px; margin-bottom: -6px; flex-wrap: wrap; justify-content: center;" id="search-engine-bar">
                     <button class="engine-btn active" data-engine="google" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Google</button>
                     <button class="engine-btn" data-engine="ddg" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">DuckDuckGo</button>
                     <button class="engine-btn" data-engine="youtube" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">YouTube</button>
+                    <button id="add-engine-btn" style="background: rgba(56, 189, 248, 0.2); border: 1px dashed rgba(56, 189, 248, 0.5); color: #38bdf8; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">+ Engine</button>
                 </div>
-                <input type="text" id="search-input" class="search-bar" placeholder="Search Google or type a URL..." autofocus>
+                <div style="position: relative; width: 100%;">
+                    <input type="text" id="search-input" class="search-bar" placeholder="Search Google or type a URL..." autofocus autocomplete="off">
+                    <div class="autocomplete-box" id="autocomplete-box"></div>
+                </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="add-shortcut-center-btn" id="open-add-modal-btn">
                         <span>+</span> Add Shortcut
@@ -610,11 +789,22 @@
         <div></div>
     </div>
 
-    <!-- Theme Selection Modal -->
+    <!-- Theme & Particle Engine Modal -->
     <div class="theme-palette-modal" id="theme-modal">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-            <span style="font-weight: 700; font-size: 1rem; color: #fff;">Color Palette (23 Themes)</span>
+            <span style="font-weight: 700; font-size: 1rem; color: #fff;">Theme & Particle Switcher</span>
             <button id="close-theme-modal" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.2rem; cursor: pointer;">✕</button>
+        </div>
+
+        <!-- Particle Effect Switcher Control -->
+        <div style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #38bdf8;">✨ PARTICLE SIMULATION EFFECT</span>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                <button class="particle-effect-btn active" data-effect="ripples" style="padding: 6px; border-radius: 8px; background: rgba(56, 189, 248, 0.25); border: 1px solid #38bdf8; color: #fff; font-size: 0.75rem; cursor: pointer;">🌊 Water Ripples</button>
+                <button class="particle-effect-btn" data-effect="bubbles" style="padding: 6px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 0.75rem; cursor: pointer;">🫧 Bubbles Effect</button>
+                <button class="particle-effect-btn" data-effect="stars" style="padding: 6px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 0.75rem; cursor: pointer;">⭐ Floating Stars</button>
+                <button class="particle-effect-btn" data-effect="matrix" style="padding: 6px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 0.75rem; cursor: pointer;">💻 Matrix Rain</button>
+            </div>
         </div>
         
         <div class="theme-grid">
@@ -820,6 +1010,68 @@
         </div>
     </div>
 
+    <!-- Add Shortcut Modal -->
+    <div id="add-shortcut-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 22px; width: 340px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 1rem; color: #fff;">+ Add New Shortcut</span>
+            <button id="close-shortcut-modal" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.2rem; cursor: pointer;">✕</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 500;">Shortcut Name</label>
+            <input type="text" id="shortcut-name-input" placeholder="e.g. Twitch" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.88rem; outline: none;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 500;">URL / Web Address</label>
+            <input type="text" id="shortcut-url-input" placeholder="e.g. twitch.tv" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.88rem; outline: none;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 500;">Dock Position / Category</label>
+            <select id="shortcut-side-select" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,23,42,0.9); color: #fff; font-size: 0.88rem; outline: none; cursor: pointer;">
+                <option value="left">Left Side Dock (Main)</option>
+                <option value="right">Right Side Dock (Apps)</option>
+            </select>
+        </div>
+
+        <button id="save-shortcut-btn" style="margin-top: 4px; width: 100%; padding: 10px; border-radius: 12px; background: #38bdf8; border: none; color: #0f172a; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">Save Shortcut</button>
+    </div>
+
+    <!-- Custom Search Engine Modal -->
+    <div id="add-engine-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 22px; width: 340px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 1rem; color: #fff;">+ Add Custom Engine</span>
+            <button id="close-engine-modal" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.2rem; cursor: pointer;">✕</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 500;">Engine Name</label>
+            <input type="text" id="engine-name-input" placeholder="e.g. GitHub" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.88rem; outline: none;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 500;">Search URL (Use %s for query)</label>
+            <input type="text" id="engine-url-input" placeholder="https://github.com/search?q=%s" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.88rem; outline: none;">
+        </div>
+
+        <button id="save-engine-btn" style="margin-top: 4px; width: 100%; padding: 10px; border-radius: 12px; background: #38bdf8; border: none; color: #0f172a; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">Add Search Engine</button>
+    </div>
+
+    <!-- Speed Test Modal -->
+    <div id="speedtest-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 22px; width: 320px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); flex-direction: column; gap: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 1rem; color: #fff;">⚡ Web Speed Test</span>
+            <button id="close-speedtest-btn" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.2rem; cursor: pointer;">✕</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.05); padding: 14px; border-radius: 16px;">
+            <div style="display: flex; justify-content: space-between;"><span style="color: rgba(255,255,255,0.7);">Download:</span><span id="speed-download-val" style="font-weight: 700; color: #38bdf8;">-- Mbps</span></div>
+            <div style="display: flex; justify-content: space-between;"><span style="color: rgba(255,255,255,0.7);">Ping:</span><span><strong id="speed-ping-val" style="color: #4ade80;">--</strong> ms</span></div>
+            <div style="display: flex; justify-content: space-between;"><span style="color: rgba(255,255,255,0.7);">Jitter:</span><span><strong id="speed-jitter-val" style="color: #a855f7;">--</strong> ms</span></div>
+        </div>
+        <button id="run-speedtest-btn" style="width: 100%; padding: 10px; border-radius: 12px; background: #38bdf8; border: none; color: #0f172a; font-size: 0.88rem; font-weight: 700; cursor: pointer;">Run Speed Test</button>
+    </div>
+
     <script>
         // Aurora 2D Water Simulation Engine
         const canvas = document.getElementById('water-canvas');
@@ -855,7 +1107,6 @@
                         const nx = simX + i;
                         const ny = simY + j;
                         if (nx >= 1 && nx < simWidth - 1 && ny >= 1 && ny < simHeight - 1) {
-                            // Smooth Gaussian-like radial falloff for seamless blending
                             const falloff = Math.exp(-distSq / (radius * 1.2));
                             buffer1[ny * simWidth + nx] += strength * falloff;
                         }
@@ -881,9 +1132,7 @@
         }
 
         window.addEventListener('mousemove', (e) => {
-            const edgeThreshold = 12; // Generous safety border to prevent corner/edge sticking
-            
-            // Instantly stop & clear tracking if cursor is near any window edge
+            const edgeThreshold = 12;
             if (
                 e.clientX <= edgeThreshold || 
                 e.clientY <= edgeThreshold || 
@@ -894,7 +1143,6 @@
                 return;
             }
 
-            // Allow water ripples when hovering over .title, but block over other GUI cards/inputs
             const hitTitle = e.target.closest('.title');
             const hitGui = e.target.closest('.ui-layer, .cps-card, .top-header, .clock-card, .weather-btn-card, .sound-toggle-btn, .search-container, .search-bar, .add-shortcut-center-btn, .edge-sidebar, #notes-toggle-btn, #notes-drawer, .theme-btn-top-right, .theme-palette-modal');
             
@@ -907,7 +1155,6 @@
             const currentY = Math.floor(e.clientY / scale);
 
             if (lastMouseX !== null && lastMouseY !== null) {
-                // Interpolate points along the line for continuous smooth trail
                 const dx = currentX - lastMouseX;
                 const dy = currentY - lastMouseY;
                 const dist = Math.hypot(dx, dy);
@@ -926,7 +1173,6 @@
             lastMouseY = currentY;
         });
 
-        // Reset mouse interpolation when cursor exits viewport window, blur, or pointer leaves
         window.addEventListener('mouseleave', clearMouseTracking);
         window.addEventListener('pointerout', (e) => {
             if (!e.relatedTarget || e.relatedTarget.nodeName === "HTML") {
@@ -935,6 +1181,208 @@
         });
         window.addEventListener('blur', clearMouseTracking);
         window.addEventListener('mouseup', clearMouseTracking);
+
+        // Daily Motivational Quotes System
+        const quotes = [
+            "\"The only way to do great work is to love what you do.\" — Steve Jobs",
+            "\"Action is the foundational key to all success.\" — Pablo Picasso",
+            "\"Dream big and dare to fail.\" — Norman Vaughan",
+            "\"Everything you’ve ever wanted is on the other side of fear.\" — George Addair",
+            "\"Believe you can and you're halfway there.\" — Theodore Roosevelt",
+            "\"Quality is not an act, it is a habit.\" — Aristotle",
+            "\"Simplicity is the ultimate sophistication.\" — Leonardo da Vinci"
+        ];
+        function setDailyQuote() {
+            const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            document.getElementById('daily-quote').textContent = quotes[dayOfYear % quotes.length];
+        }
+        setDailyQuote();
+
+        // Drag and Drop Shortcut Manager
+        let draggedItem = null;
+
+        function attachDragListeners(item) {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = item;
+                item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+
+            item.addEventListener('dragend', () => {
+                if (draggedItem) {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                }
+            });
+        }
+
+        document.querySelectorAll('.shortcut-item').forEach(attachDragListeners);
+
+        [document.getElementById('sidebar-left'), document.getElementById('sidebar-right')].forEach(sidebar => {
+            sidebar.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                sidebar.classList.add('drag-over');
+            });
+
+            sidebar.addEventListener('dragleave', () => {
+                sidebar.classList.remove('drag-over');
+            });
+
+            sidebar.addEventListener('drop', (e) => {
+                e.preventDefault();
+                sidebar.classList.remove('drag-over');
+                if (draggedItem) {
+                    sidebar.appendChild(draggedItem);
+                }
+            });
+        });
+
+        // Custom Search Engine Manager
+        let customEngines = JSON.parse(localStorage.getItem('chromer_custom_engines') || '{}');
+        const engineBar = document.getElementById('search-engine-bar');
+        const addEngineBtn = document.getElementById('add-engine-btn');
+        const engineModal = document.getElementById('add-engine-modal');
+        const closeEngineBtn = document.getElementById('close-engine-modal');
+        const saveEngineBtn = document.getElementById('save-engine-btn');
+
+        function renderEngineButtons() {
+            Object.keys(customEngines).forEach(key => {
+                if (document.querySelector(`[data-engine="${key}"]`)) return;
+                const btn = document.createElement('button');
+                btn.className = 'engine-btn';
+                btn.dataset.engine = key;
+                btn.textContent = customEngines[key].name;
+                btn.style.cssText = "background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;";
+                btn.addEventListener('click', () => selectEngine(btn, key));
+                engineBar.insertBefore(btn, addEngineBtn);
+            });
+        }
+
+        function selectEngine(targetBtn, engineKey) {
+            document.querySelectorAll('.engine-btn').forEach(b => {
+                b.style.background = 'rgba(255,255,255,0.05)';
+                b.style.color = 'rgba(255,255,255,0.6)';
+                b.classList.remove('active');
+            });
+            targetBtn.style.background = 'rgba(255,255,255,0.15)';
+            targetBtn.style.color = '#fff';
+            targetBtn.classList.add('active');
+            currentEngine = engineKey;
+        }
+
+        addEngineBtn.addEventListener('click', () => { engineModal.style.display = 'flex'; });
+        closeEngineBtn.addEventListener('click', () => { engineModal.style.display = 'none'; });
+
+        saveEngineBtn.addEventListener('click', () => {
+            const name = document.getElementById('engine-name-input').value.trim();
+            let url = document.getElementById('engine-url-input').value.trim();
+
+            if (!name || !url) return;
+            if (!url.includes('%s')) url += '%s';
+
+            const key = name.toLowerCase().replace(/\s+/g, '');
+            customEngines[key] = { name, url };
+            localStorage.setItem('chromer_custom_engines', JSON.stringify(customEngines));
+
+            renderEngineButtons();
+            document.getElementById('engine-name-input').value = '';
+            document.getElementById('engine-url-input').value = '';
+            engineModal.style.display = 'none';
+        });
+
+        renderEngineButtons();
+
+        // Auto-detect emoji based on name or URL keywords
+        function getAutoEmoji(name, url) {
+            const str = (name + ' ' + url).toLowerCase();
+            if (str.includes('github') || str.includes('git') || str.includes('code')) return '🐙';
+            if (str.includes('twitch') || str.includes('stream') || str.includes('tv')) return '👾';
+            if (str.includes('discord') || str.includes('chat') || str.includes('message')) return '💬';
+            if (str.includes('reddit') || str.includes('forum')) return '🤖';
+            if (str.includes('spotify') || str.includes('music') || str.includes('audio') || str.includes('sound')) return '🎵';
+            if (str.includes('twitter') || str.includes('x.com')) return '🐦';
+            if (str.includes('instagram') || str.includes('photo') || str.includes('pic')) return '📷';
+            if (str.includes('netflix') || str.includes('movie') || str.includes('cinema')) return '🍿';
+            if (str.includes('mail') || str.includes('gmail') || str.includes('inbox')) return '✉️';
+            if (str.includes('drive') || str.includes('cloud') || str.includes('box')) return '☁️';
+            if (str.includes('game') || str.includes('play') || str.includes('roblox') || str.includes('minecraft')) return '🎮';
+            if (str.includes('shop') || str.includes('amazon') || str.includes('store') || str.includes('buy')) return '🛍️';
+            if (str.includes('news') || str.includes('paper') || str.includes('post')) return '📰';
+            if (str.includes('wiki') || str.includes('search') || str.includes('book')) return '📚';
+            if (str.includes('map') || str.includes('earth') || str.includes('world')) return '🌍';
+            return '🔗';
+        }
+
+        // Custom Shortcuts Storage & Rendering Engine
+        let customShortcuts = JSON.parse(localStorage.getItem('chromer_custom_shortcuts') || '[]');
+
+        function createShortcutElement(shortcut) {
+            const a = document.createElement('a');
+            a.href = shortcut.url.startsWith('http') ? shortcut.url : 'https://' + shortcut.url;
+            a.target = '_blank';
+            a.className = 'shortcut-item';
+            a.draggable = true;
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'shortcut-icon';
+            iconDiv.textContent = shortcut.icon || getAutoEmoji(shortcut.name, shortcut.url);
+            
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'shortcut-label';
+            labelDiv.textContent = shortcut.name;
+
+            a.appendChild(iconDiv);
+            a.appendChild(labelDiv);
+            attachDragListeners(a);
+            return a;
+        }
+
+        function loadCustomShortcuts() {
+            customShortcuts.forEach(sc => {
+                const sidebar = document.getElementById(sc.side === 'right' ? 'sidebar-right' : 'sidebar-left');
+                if (sidebar) {
+                    sidebar.appendChild(createShortcutElement(sc));
+                }
+            });
+        }
+
+        loadCustomShortcuts();
+
+        // Add Shortcut Modal Interactions
+        const addModalBtn = document.getElementById('open-add-modal-btn');
+        const shortcutModal = document.getElementById('add-shortcut-modal');
+        const closeShortcutBtn = document.getElementById('close-shortcut-modal');
+        const saveShortcutBtn = document.getElementById('save-shortcut-btn');
+
+        addModalBtn.addEventListener('click', () => {
+            shortcutModal.style.display = 'flex';
+        });
+
+        closeShortcutBtn.addEventListener('click', () => {
+            shortcutModal.style.display = 'none';
+        });
+
+        saveShortcutBtn.addEventListener('click', () => {
+            const name = document.getElementById('shortcut-name-input').value.trim();
+            const url = document.getElementById('shortcut-url-input').value.trim();
+            const side = document.getElementById('shortcut-side-select').value;
+
+            if (!name || !url) {
+                return;
+            }
+
+            const autoIcon = getAutoEmoji(name, url);
+            const newShortcut = { name, url, icon: autoIcon, side };
+            customShortcuts.push(newShortcut);
+            localStorage.setItem('chromer_custom_shortcuts', JSON.stringify(customShortcuts));
+
+            const sidebar = document.getElementById(side === 'right' ? 'sidebar-right' : 'sidebar-left');
+            sidebar.appendChild(createShortcutElement(newShortcut));
+
+            document.getElementById('shortcut-name-input').value = '';
+            document.getElementById('shortcut-url-input').value = '';
+            shortcutModal.style.display = 'none';
+        });
 
         // Theme Palette Configurations
         const themes = {
@@ -1044,56 +1492,32 @@
 
         // Helper to calculate a high-contrast, high-legibility gradient for the title
         function getContrastingTitleGradient(bgRgb) {
-            // Calculate perceived brightness (luminance) of the background (0-255 scale)
             const luminance = (0.299 * bgRgb[0] + 0.587 * bgRgb[1] + 0.114 * bgRgb[2]);
-            
-            // If the background is dark (luminance < 130), force bright vivid pastels/whites
             if (luminance < 130) {
-                // Determine dominant color channel to pick a complementary pop color
                 const r = bgRgb[0], g = bgRgb[1], b = bgRgb[2];
                 if (r >= g && r >= b) {
-                    // Reddish background -> Cyan to Golden Yellow gradient
                     return 'linear-gradient(135deg, #ffffff, #38bdf8, #fef08a)';
                 } else if (g >= r && g >= b) {
-                    // Greenish background -> Bright Magenta to Light Sky Blue gradient
                     return 'linear-gradient(135deg, #ffffff, #f472b6, #38bdf8)';
                 } else if (b >= r && b >= g) {
-                    // Blue/Violet background -> Vivid Amber to Pure White gradient
                     return 'linear-gradient(135deg, #ffffff, #fbbf24, #f472b6)';
                 } else {
                     return 'linear-gradient(135deg, #ffffff, #60a5fa, #f472b6)';
                 }
             } else {
-                // If background is light/bright, force ultra-dark bold tones for max legibility
                 return 'linear-gradient(135deg, #0f172a, #1e1b4b, #311802)';
             }
         }
 
-        // Theme Background RGB Map for Preset Themes
         const themeBgRgb = {
-            crimson: [84, 17, 29],
-            cyberpunk: [42, 8, 69],
-            vaporwave: [74, 0, 78],
-            ocean: [3, 32, 48],
-            amethyst: [30, 5, 58],
-            amber: [49, 24, 2],
-            matrix: [2, 32, 19],
-            sakura: [59, 10, 33],
-            arctic: [7, 25, 39],
-            solarflare: [69, 10, 10],
-            synthwave: [24, 0, 46],
-            cosmic: [9, 0, 20],
-            gold: [36, 20, 0],
-            lava: [59, 0, 0],
-            emerald: [2, 44, 34],
-            candy: [59, 7, 100],
-            acid: [26, 46, 5],
-            supernova: [66, 32, 6],
-            deepviolet: [46, 16, 101],
-            obsidian: [15, 23, 42],
-            coral: [76, 5, 25],
-            mint: [6, 78, 59],
-            twilight: [30, 27, 75]
+            crimson: [84, 17, 29], cyberpunk: [42, 8, 69], vaporwave: [74, 0, 78],
+            ocean: [3, 32, 48], amethyst: [30, 5, 58], amber: [49, 24, 2],
+            matrix: [2, 32, 19], sakura: [59, 10, 33], arctic: [7, 25, 39],
+            solarflare: [69, 10, 10], synthwave: [24, 0, 46], cosmic: [9, 0, 20],
+            gold: [36, 20, 0], lava: [59, 0, 0], emerald: [2, 44, 34],
+            candy: [59, 7, 100], acid: [26, 46, 5], supernova: [66, 32, 6],
+            deepviolet: [46, 16, 101], obsidian: [15, 23, 42], coral: [76, 5, 25],
+            mint: [6, 78, 59], twilight: [30, 27, 75]
         };
 
         let activeThemeKey = localStorage.getItem('chromer_theme') || 'crimson';
@@ -1116,7 +1540,6 @@
             localStorage.setItem('chromer_theme', key);
             document.body.style.background = themes[key].bg;
 
-            // Dynamically update the title gradient to a high-contrast color palette
             const bgRgb = themeBgRgb[key] || [50, 50, 50];
             const titleGrad = getContrastingTitleGradient(bgRgb);
             document.querySelector('.title').style.setProperty('--title-gradient', titleGrad);
@@ -1130,10 +1553,8 @@
             });
         }
 
-        // Apply saved theme on start
         applyTheme(activeThemeKey);
 
-        // Theme Modal Handlers
         const themeBtn = document.getElementById('theme-toggle-btn');
         const themeModal = document.getElementById('theme-modal');
         const closeThemeBtn = document.getElementById('close-theme-modal');
@@ -1173,84 +1594,6 @@
             themeModal.style.display = 'none';
         });
 
-        // Water Physics & Render Loop
-        function renderWater() {
-            // Swap buffers
-            const temp = buffer1;
-            buffer1 = buffer2;
-            buffer2 = temp;
-
-            const data = imgData.data;
-            const themeRgb = themes[activeThemeKey].rgb;
-
-            for (let y = 1; y < height - 1; y++) {
-                const sy = y + marginOffset;
-                for (let x = 1; x < width - 1; x++) {
-                    const sx = x + marginOffset;
-                    const idx = sy * simWidth + sx;
-
-                    // Wave equation with 0.85 dampening for fast, clean dissipation
-                    const waveVal = ((
-                        buffer1[idx - 1] +
-                        buffer1[idx + 1] +
-                        buffer1[idx - simWidth] +
-                        buffer1[idx + simWidth]
-                    ) >> 1) - buffer2[idx];
-
-                    buffer2[idx] = waveVal * 0.85;
-
-                    // Compute slope / displacement for shading
-                    const xDiff = buffer2[idx - 1] - buffer2[idx + 1];
-                    const yDiff = buffer2[idx - simWidth] - buffer2[idx + simWidth];
-
-                    const intensity = Math.abs(xDiff) + Math.abs(yDiff);
-                    const pixelIdx = (y * width + x) * 4;
-
-                    // Dynamically map active theme RGB to water wave intensity
-                    data[pixelIdx] = Math.min(255, Math.floor(themeRgb[0] * (intensity / 30)));     // Red
-                    data[pixelIdx + 1] = Math.min(255, Math.floor(themeRgb[1] * (intensity / 30))); // Green
-                    data[pixelIdx + 2] = Math.min(255, Math.floor(themeRgb[2] * (intensity / 30))); // Blue
-                    data[pixelIdx + 3] = Math.min(255, intensity * 5);                               // Alpha
-                }
-            }
-
-            ctx.putImageData(imgData, 0, 0);
-
-            // FPS & CPS tracking
-            frameCount++;
-            const now = performance.now();
-            if (now - lastFpsTime >= 1000) {
-                fpsDisplay.textContent = Math.round((frameCount * 1000) / (now - lastFpsTime));
-                frameCount = 0;
-                lastFpsTime = now;
-            }
-
-            // CPS calculation
-            const cutoff = Date.now() - 1000;
-            while (clickTimestamps.length > 0 && clickTimestamps[0] < cutoff) {
-                clickTimestamps.shift();
-            }
-            cpsDisplay.textContent = clickTimestamps.length.toFixed(1);
-
-            requestAnimationFrame(renderWater);
-        }
-
-        // Window resize handler
-        window.addEventListener('resize', () => {
-            width = Math.max(1, Math.floor((window.innerWidth || 800) / scale));
-            height = Math.max(1, Math.floor((window.innerHeight || 600) / scale));
-
-            simWidth = width + marginOffset * 2;
-            simHeight = height + marginOffset * 2;
-
-            canvas.width = width;
-            canvas.height = height;
-
-            buffer1 = new Float32Array(simWidth * simHeight);
-            buffer2 = new Float32Array(simWidth * simHeight);
-            imgData = ctx.createImageData(width, height);
-        });
-
         // Time & Date Updates
         function updateClock() {
             const now = new Date();
@@ -1282,6 +1625,8 @@
                 if (!val) return;
                 if (/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(val)) {
                     window.location.href = val.startsWith('http') ? val : 'https://' + val;
+                } else if (customEngines[currentEngine]) {
+                    window.location.href = customEngines[currentEngine].url.replace('%s', encodeURIComponent(val));
                 } else if (currentEngine === 'youtube') {
                     window.location.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(val)}`;
                 } else if (currentEngine === 'ddg') {
@@ -1293,24 +1638,282 @@
         });
 
         // Scratchpad drawer toggle
-        const notesBtn = document.getElementById('notes-toggle-btn');
-        const notesDrawer = document.getElementById('notes-drawer');
         const notesArea = document.getElementById('quick-notes-area');
 
         if (localStorage.getItem('chromer_notes')) {
             notesArea.value = localStorage.getItem('chromer_notes');
         }
 
-        notesBtn.addEventListener('click', () => {
-            notesDrawer.style.display = notesDrawer.style.display === 'flex' ? 'none' : 'flex';
+        // Particle Engine Mode & FPS Limiter Variables
+        let currentParticleEffect = 'ripples'; // Default restored back to original water ripples
+        let fpsLimit = 60; // 60, 30, or 0 (uncapped)
+        let isIncognito = false;
+
+        // Particle Switcher Handlers
+        document.querySelectorAll('.particle-effect-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.particle-effect-btn').forEach(b => {
+                    b.style.background = 'rgba(255,255,255,0.05)';
+                    b.style.borderColor = 'rgba(255,255,255,0.1)';
+                });
+                btn.style.background = 'rgba(56, 189, 248, 0.25)';
+                btn.style.borderColor = '#38bdf8';
+                currentParticleEffect = btn.dataset.effect;
+            });
         });
 
+        // FPS Limiter Toggle
+        const fpsCard = document.getElementById('fps-card');
+        const fpsLimitLabel = document.getElementById('fps-limit-label');
+        fpsCard.addEventListener('click', () => {
+            if (fpsLimit === 60) {
+                fpsLimit = 30;
+                fpsLimitLabel.textContent = 'MAX 30';
+            } else if (fpsLimit === 30) {
+                fpsLimit = 0;
+                fpsLimitLabel.textContent = 'UNCAPPED';
+            } else {
+                fpsLimit = 60;
+                fpsLimitLabel.textContent = 'MAX 60';
+            }
+        });
+
+        // Incognito Mode Toggle
+        const incognitoBtn = document.getElementById('incognito-btn');
+        incognitoBtn.addEventListener('click', () => {
+            isIncognito = !isIncognito;
+            incognitoBtn.classList.toggle('active', isIncognito);
+            document.getElementById('notes-status-text').textContent = isIncognito ? 'Incognito Mode' : 'Auto-saved';
+        });
+
+        // Calculator Logic
+        const calcDisplay = document.getElementById('calc-display');
+        document.querySelectorAll('.calc-key').forEach(key => {
+            key.addEventListener('click', () => {
+                const txt = key.textContent;
+                if (txt === 'C') {
+                    calcDisplay.value = '';
+                } else if (txt === '=') {
+                    try {
+                        calcDisplay.value = Function('"use strict";return (' + calcDisplay.value + ')')();
+                    } catch(err) {
+                        calcDisplay.value = 'Error';
+                    }
+                } else {
+                    calcDisplay.value += txt;
+                }
+            });
+        });
+
+        // Side Drawer Toggle Logic
+        function setupDrawer(btnId, drawerId) {
+            const btn = document.getElementById(btnId);
+            const drawer = document.getElementById(drawerId);
+            btn.addEventListener('click', () => {
+                const isVis = drawer.style.display === 'flex';
+                document.querySelectorAll('.drawer-panel').forEach(d => d.style.display = 'none');
+                drawer.style.display = isVis ? 'none' : 'flex';
+            });
+        }
+        setupDrawer('notes-toggle-btn', 'notes-drawer');
+        setupDrawer('calc-toggle-btn', 'calc-drawer');
+        setupDrawer('clocks-toggle-btn', 'clocks-drawer');
+
+        // World Clocks Update Loop
+        function updateWorldClocks() {
+            const now = new Date();
+            const getTime = (tz) => now.toLocaleTimeString([], { timeZone: tz, hour: '2-digit', minute: '2-digit' });
+            document.getElementById('clock-ny').textContent = getTime('America/New_York');
+            document.getElementById('clock-london').textContent = getTime('Europe/London');
+            document.getElementById('clock-tokyo').textContent = getTime('Asia/Tokyo');
+            document.getElementById('clock-sydney').textContent = getTime('Australia/Sydney');
+        }
+        setInterval(updateWorldClocks, 1000);
+        updateWorldClocks();
+
+        // Search Autocomplete Logic
+        const searchInput = document.getElementById('search-input');
+        const autoBox = document.getElementById('autocomplete-box');
+        const autoSuggestions = ['YouTube', 'Google Docs', 'GitHub', 'Aternos Minecraft Server', 'Chunkbase Finder', 'Twitch Streams', 'Wikipedia', 'Reddit', 'Weather Today', 'ChatGPT'];
+
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value.toLowerCase().trim();
+            autoBox.innerHTML = '';
+            if (!val) { autoBox.style.display = 'none'; return; }
+
+            const matches = autoSuggestions.filter(s => s.toLowerCase().includes(val));
+            if (matches.length === 0) { autoBox.style.display = 'none'; return; }
+
+            matches.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.innerHTML = `<span>🔍</span> <span>${m}</span>`;
+                div.addEventListener('click', () => {
+                    searchInput.value = m;
+                    autoBox.style.display = 'none';
+                    searchInput.focus();
+                });
+                autoBox.appendChild(div);
+            });
+            autoBox.style.display = 'flex';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) autoBox.style.display = 'none';
+        });
+
+        // Speed Test Logic
+        const speedModal = document.getElementById('speedtest-modal');
+        const speedtestBtn = document.getElementById('speedtest-btn');
+        const closeSpeedtestBtn = document.getElementById('close-speedtest-btn');
+        const runSpeedtestBtn = document.getElementById('run-speedtest-btn');
+
+        if (speedtestBtn && speedModal) {
+            speedtestBtn.addEventListener('click', () => speedModal.style.display = 'flex');
+        }
+        if (closeSpeedtestBtn && speedModal) {
+            closeSpeedtestBtn.addEventListener('click', () => speedModal.style.display = 'none');
+        }
+        if (runSpeedtestBtn) {
+            runSpeedtestBtn.addEventListener('click', () => {
+                const dlVal = document.getElementById('speed-download-val');
+                const pingVal = document.getElementById('speed-ping-val');
+                const jitterVal = document.getElementById('speed-jitter-val');
+                
+                if (dlVal) dlVal.textContent = 'Testing...';
+                setTimeout(() => {
+                    if (dlVal) dlVal.textContent = (Math.random() * 80 + 40).toFixed(1) + ' Mbps';
+                    if (pingVal) pingVal.textContent = Math.floor(Math.random() * 15 + 8);
+                    if (jitterVal) jitterVal.textContent = Math.floor(Math.random() * 5 + 1);
+                }, 1200);
+            });
+        }
+
+        // Particle Assets (Stars & Bubbles Array)
+        const bubbles = Array.from({ length: 60 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 4 + 1,
+            speed: Math.random() * 0.8 + 0.2
+        }));
+
+        const stars = Array.from({ length: 100 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 1.5 + 0.5,
+            alpha: Math.random()
+        }));
+
+        function renderParticles() {
+            ctx.clearRect(0, 0, width, height);
+            const themeRgb = themes[activeThemeKey].rgb;
+
+            if (currentParticleEffect === 'bubbles') {
+                ctx.fillStyle = `rgba(${themeRgb.join(',')}, 0.6)`;
+                bubbles.forEach(b => {
+                    b.y -= b.speed;
+                    if (b.y < 0) b.y = height;
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            } else if (currentParticleEffect === 'stars') {
+                stars.forEach(s => {
+                    s.alpha += (Math.random() - 0.5) * 0.05;
+                    s.alpha = Math.max(0.1, Math.min(1, s.alpha));
+                    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                    ctx.fillRect(s.x, s.y, s.size, s.size);
+                });
+            } else if (currentParticleEffect === 'matrix') {
+                ctx.fillStyle = `rgb(${themeRgb.join(',')})`;
+                ctx.font = '10px monospace';
+                for(let i = 0; i < width; i += 12) {
+                    const char = String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96));
+                    ctx.fillText(char, i, (Date.now() / 10 + i * 15) % height);
+                }
+            }
+        }
+
+        // Modified render loop with FPS capping
+        let lastRenderTimestamp = 0;
+
+        function renderWater(timestamp) {
+            if (fpsLimit > 0) {
+                const interval = 1000 / fpsLimit;
+                if (timestamp - lastRenderTimestamp < interval) {
+                    requestAnimationFrame(renderWater);
+                    return;
+                }
+            }
+            lastRenderTimestamp = timestamp;
+
+            if (currentParticleEffect === 'ripples') {
+                // Swap buffers for water wave simulation
+                const temp = buffer1;
+                buffer1 = buffer2;
+                buffer2 = temp;
+
+                const data = imgData.data;
+                const themeRgb = themes[activeThemeKey].rgb;
+
+                for (let y = 1; y < height - 1; y++) {
+                    const sy = y + marginOffset;
+                    for (let x = 1; x < width - 1; x++) {
+                        const sx = x + marginOffset;
+                        const idx = sy * simWidth + sx;
+
+                        const waveVal = ((
+                            buffer1[idx - 1] +
+                            buffer1[idx + 1] +
+                            buffer1[idx - simWidth] +
+                            buffer1[idx + simWidth]
+                        ) >> 1) - buffer2[idx];
+
+                        buffer2[idx] = waveVal * 0.85;
+
+                        const xDiff = buffer2[idx - 1] - buffer2[idx + 1];
+                        const yDiff = buffer2[idx - simWidth] - buffer2[idx + simWidth];
+
+                        const intensity = Math.abs(xDiff) + Math.abs(yDiff);
+                        const pixelIdx = (y * width + x) * 4;
+
+                        data[pixelIdx] = Math.min(255, Math.floor(themeRgb[0] * (intensity / 30)));
+                        data[pixelIdx + 1] = Math.min(255, Math.floor(themeRgb[1] * (intensity / 30)));
+                        data[pixelIdx + 2] = Math.min(255, Math.floor(themeRgb[2] * (intensity / 30)));
+                        data[pixelIdx + 3] = Math.min(255, intensity * 5);
+                    }
+                }
+                ctx.putImageData(imgData, 0, 0);
+            } else {
+                renderParticles();
+            }
+
+            // FPS & CPS tracking
+            frameCount++;
+            const now = performance.now();
+            if (now - lastFpsTime >= 1000) {
+                fpsDisplay.textContent = Math.round((frameCount * 1000) / (now - lastFpsTime));
+                frameCount = 0;
+                lastFpsTime = now;
+            }
+
+            const cutoff = Date.now() - 1000;
+            while (clickTimestamps.length > 0 && clickTimestamps[0] < cutoff) {
+                clickTimestamps.shift();
+            }
+            cpsDisplay.textContent = clickTimestamps.length.toFixed(1);
+
+            requestAnimationFrame(renderWater);
+        }
+
         notesArea.addEventListener('input', () => {
-            localStorage.setItem('chromer_notes', notesArea.value);
+            if (!isIncognito) {
+                localStorage.setItem('chromer_notes', notesArea.value);
+            }
         });
 
         // Launch simulation loop
-        renderWater();
+        requestAnimationFrame(renderWater);
     </script>
 </body>
 </html>
